@@ -45,6 +45,6 @@
     "less": "^2.4.0",
     "mocha": "^2.1.0",
     "selenium-webdriver": "^2.45.0",
-    "swagger-client": "git+https://github.com/jensoleg/swagger-js.git"
+    "swagger-client": "git+https://github.com/PagerDuty/swagger-js.git"
   }
 }
