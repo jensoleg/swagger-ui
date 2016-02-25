@@ -11,6 +11,7 @@ $(document).ready(function() {
   function runScript() {
     cleanUpGeneralLayout();
     formatInnerElements();
+    removeInlineModelsInLeftPane();
   };
 
   /* Helper Functions */
@@ -112,4 +113,11 @@ $(document).ready(function() {
       }
     }, 100);
   };
+
+  function removeInlineModelsInLeftPane() {
+    $(".code-signature:contains('inline_model')").map(function() {
+      $(this).siblings(".parameter-location").remove();
+      $(this).remove();
+    });
+  }
 });
