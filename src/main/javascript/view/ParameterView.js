@@ -4,9 +4,9 @@ SwaggerUi.Views.ParameterView = Backbone.View.extend({
   initialize: function(){
     Handlebars.registerHelper('isArray', function(param, opts) {
       if (param.type.toLowerCase() === 'array' || param.allowMultiple) {
-        opts.fn(this);
+        return opts.fn(this);
       } else {
-        opts.inverse(this);
+        return opts.inverse(this);
       }
     });
   },
@@ -30,10 +30,12 @@ SwaggerUi.Views.ParameterView = Backbone.View.extend({
     this.model.paramType = this.model.in || this.model.paramType;
     this.model.isBody = this.model.paramType === 'body' || this.model.in === 'body';
     this.model.isFile = type && type.toLowerCase() === 'file';
-    this.model.default = (this.model.default || this.model.defaultValue);
+    this.model.isArray = (this.model.type.toLowerCase() === 'array' || this.model.allowMultiple);
+    this.model.default = (this.model.default || this.model.defaultValue) || '';
 
     if(this.model.format === 'password') {
         this.model.inputType = 'password';
+        this.model.isArray = false;
     } else {
         this.model.inputType = 'text';
     }
