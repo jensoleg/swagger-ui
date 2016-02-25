@@ -134,12 +134,6 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
       $('.optionsWrapper', $(this)).hide();
     });
 
-    if (window.location.hash.length === 0 ) {
-      var n = $(this.el).find("#resources_nav [data-resource]").first();
-      n.trigger("click");
-      $(window).scrollTop(0)
-    }
-
     return this;
   },
 
@@ -187,6 +181,7 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
       },
       attributes: {
         "data-resource": 'resource_' + resource.name,
+        "data-endpoint": 'resource_' + resource.id,
         "label": resource.name
       },
       router: this.router,
@@ -204,12 +199,8 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
   },
 
   clickResource: function (e) {
-    if (!$(e.target).is(".item")) {
-      var n = $(e.target).find(".item").first();
-      $('.sticky-nav').find("[data-resource].active").removeClass("active");
-      $(e.target).find("[data-resource]").first().addClass("active");
-      n.trigger("click")
-    }
+    $('.sticky-nav').removeClass("nav-open")
+    return false;
   },
 
   toggleToken: function (e) {

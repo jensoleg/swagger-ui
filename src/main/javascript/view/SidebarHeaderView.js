@@ -7,6 +7,7 @@ SwaggerUi.Views.SidebarHeaderView = Backbone.View.extend({
   },
 
   events: {
+    'click': 'clickSidebarHeader',
     'click [data-endpoint]': 'clickSidebarItem'
   },
 
@@ -37,16 +38,31 @@ SwaggerUi.Views.SidebarHeaderView = Backbone.View.extend({
     $(this.el).append(sidebarItemView.render().el);
   },
 
-  clickSidebarItem: function (e) {
-
+  clickSidebarHeader: function (e) {
     var elem = $(e.target);
-    var eln = $("#" + elem.attr("data-endpoint"));
+
+    if (elem.data("resource")) {
+      return !this.activate(elem);
+    }
+    return true;
+  },
+
+  clickSidebarItem: function (e) {
+    var elem = $(e.target);
 
     if (elem.is(".item")) {
-      scroll(elem.attr("data-endpoint"));
-      setSelected(elem);
-      updateUrl(eln.find(".path a").first().attr("href"))
+      return !this.activate(elem);
     }
+    return true;
+  },
+
+  activate: function (elem) {
+    var eln = $("#" + elem.attr("data-endpoint"));
+
+    scroll(elem.attr("data-endpoint"));
+    setSelected(elem);
+    updateUrl(eln.find(".path a").first().attr("href"))
+    return matchMedia();
 
     /* scroll */
     function scroll(elem) {
