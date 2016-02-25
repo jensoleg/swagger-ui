@@ -118,6 +118,34 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
       }
     }
 
+    contentTypeModel = {
+      isParam: false
+    };
+    contentTypeModel.consumes = this.model.consumes;
+    contentTypeModel.produces = this.model.produces;
+    ref3 = this.model.parameters;
+    for (n = 0, len2 = ref3.length; n < len2; n++) {
+      param = ref3[n];
+      type = param.type || param.dataType || '';
+      if (typeof type === 'undefined') {
+        schema = param.schema;
+        if (schema && schema.$ref) {
+          ref = schema.$ref;
+          if (ref.indexOf('#/definitions/') === 0) {
+            type = ref.substring('#/definitions/'.length);
+          } else {
+            type = ref;
+          }
+        }
+      }
+      if (type && type.toLowerCase() === 'file') {
+        if (!contentTypeModel.consumes) {
+          contentTypeModel.consumes = 'multipart/form-data';
+        }
+      }
+      param.type = type;
+    }
+
     if (typeof this.model.responses !== 'undefined') {
       this.model.responseMessages = [];
       ref2 = this.model.responses;
@@ -166,7 +194,18 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
         id: this.parentId + '_' + this.nickname
       };
     }
+
     $(this.el).html(Handlebars.templates.operation(this.model));
+
+    ref4 = this.model.parameters;
+    for (p = 0, len3 = ref4.length; p < len3; p++) {
+      param = ref4[p];
+      this.addParameter(param, contentTypeModel.consumes);
+      if (param.paramType === 'body' || param.in === 'body') {
+        this.addBodyModel(param)
+      }
+    }
+
     if (signatureModel) {
       responseSignatureView = new SwaggerUi.Views.SignatureView({
         model: signatureModel,
@@ -178,52 +217,15 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
       $('.model-signature', $(this.el)).append(responseSignatureView.render().el);
     } else {
       this.model.responseClassSignature = 'string';
-      $('.model-signature', $(this.el)).html(this.model.type);
+      $('.model-signature', $(this.el)).append(this.model.type);
     }
 
-    contentTypeModel = {
-      isParam: false
-    };
-    contentTypeModel.consumes = this.model.consumes;
-    contentTypeModel.produces = this.model.produces;
-    ref3 = this.model.parameters;
-    for (n = 0, len2 = ref3.length; n < len2; n++) {
-      param = ref3[n];
-      type = param.type || param.dataType || '';
-      if (typeof type === 'undefined') {
-        schema = param.schema;
-        if (schema && schema.$ref) {
-          ref = schema.$ref;
-          if (ref.indexOf('#/definitions/') === 0) {
-            type = ref.substring('#/definitions/'.length);
-          } else {
-            type = ref;
-          }
-        }
-      }
-      if (type && type.toLowerCase() === 'file') {
-        if (!contentTypeModel.consumes) {
-          contentTypeModel.consumes = 'multipart/form-data';
-        }
-      }
-      param.type = type;
-    }
     responseContentTypeView = new SwaggerUi.Views.ResponseContentTypeView({
       model: contentTypeModel,
       router: this.router
     });
 
     $('.response-content-type', $(this.el)).append(responseContentTypeView.render().el);
-
-    ref4 = this.model.parameters;
-    for (p = 0, len3 = ref4.length; p < len3; p++) {
-      param = ref4[p];
-      this.addParameter(param, contentTypeModel.consumes);
-      if (param.paramType === 'body' || param.in === 'body') {
-        this.addBodyModel(param)
-      }
-    }
-
 
     ref5 = this.model.responseMessages;
     for (q = 0, len4 = ref5.length; q < len4; q++) {
