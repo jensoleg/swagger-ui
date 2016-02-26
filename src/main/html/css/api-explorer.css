@@ -1605,10 +1605,6 @@ body {
 }
 
 @media (min-width: 992px) {
-    .swagger-section #resources.samples-collapsed {
-        width: 130%;
-    }
-
     .swagger-section #resources.samples-collapsed a.toggle-samples .circle-icon:before {
         content: '\E0F8';
         font-family: budicon-font !important;
