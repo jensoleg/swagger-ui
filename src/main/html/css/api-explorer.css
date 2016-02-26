@@ -73,8 +73,8 @@
     background-color: #5c666f;
 }
 
-.swagger-section .operations .content, .swagger-section .operations .samples {
-    padding-top: 20px !important;
+.swagger-section .operations .content {
+    margin-top: 20px;
 }
 
 .swagger-section .operation {
