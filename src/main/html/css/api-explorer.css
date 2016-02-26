@@ -957,6 +957,10 @@
     padding: 1ex;
 }
 
+.swagger-section .operations .samples h4[data-toggle="collapse"] {
+    cursor: pointer;
+}
+
 .swagger-section .operations h4:not(.collapsed):after {
     content: "\E17A";
     font-family: budicon-font !important;
