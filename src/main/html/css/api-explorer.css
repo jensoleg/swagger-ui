@@ -66,7 +66,15 @@
 }
 
 .swagger-section .operations {
-    padding: 20px 0 0
+    padding: 0;
+}
+
+.swagger-section .operations .samples {
+    background-color: #5c666f;
+}
+
+.swagger-section .operations .content, .swagger-section .operations .samples {
+    padding-top: 20px !important;
 }
 
 .swagger-section .operation {
@@ -1092,7 +1100,8 @@
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 600
+    z-index: 600;
+    border-right: 1px solid #e8eaeb;
 }
 
 @media (min-width: 992px) {
@@ -1505,6 +1514,10 @@ body {
 
 .swagger-section .endpoint {
     margin: 0 0 100px
+}
+
+.swagger-section .endpoint:nth-of-type(odd) {
+	background-color: #f3f3f4;
 }
 
 @media (min-width: 992px) {
