@@ -1791,7 +1791,6 @@ body {
 .swagger-section .swagger-ui-wrap .markdown ol li, .swagger-section .swagger-ui-wrap .markdown ul li {
     padding: 3px 0;
     line-height: 1.4em;
-    color: #333
 }
 
 .swagger-section .swagger-ui-wrap form.formtastic fieldset.inputs ol li.numeric input, .swagger-section .swagger-ui-wrap form.formtastic fieldset.inputs ol li.string input, .swagger-section .swagger-ui-wrap form.formtastic fieldset.inputs ol li.url input {
