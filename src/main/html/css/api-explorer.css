@@ -1974,19 +1974,19 @@ body {
 }
 
 .swagger-section .swagger-ui-wrap ul#resources li.resource .resource_header h2.resource_name {
-    padding: 20px 20px 0 20px;
+    padding: 20px;
     border-top: 1px solid rgba(0, 0, 0, .08);
+    width: 100%;
+    margin-bottom: 0;
+    background-color: #fff;
 }
 
-@media (min-width: 992px) {
-    .swagger-section .swagger-ui-wrap ul#resources li.resource .resource_header .resource_description {
-        width: 50%;
-    }
-}
 .swagger-section .swagger-ui-wrap ul#resources li.resource .resource_header .resource_description {
-    padding: 0 20px;
+    padding: 20px 10% 20px 20px;
     margin: 0;
-    color: #838991
+    color: #838991;
+    width: 100%;
+    background-color: #fff;
 }
 
 .swagger-section .swagger-ui-wrap ul#resources li.resource.active div.heading h2 a, .swagger-section .swagger-ui-wrap ul#resources li.resource:hover div.heading h2 a {
