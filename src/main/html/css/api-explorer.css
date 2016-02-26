@@ -66,7 +66,15 @@
 }
 
 .swagger-section .operations {
-    padding: 20px 0 0
+    padding: 0;
+}
+
+.swagger-section .operations .samples {
+    background-color: #5c666f;
+}
+
+.swagger-section .operations .content, .swagger-section .operations .samples {
+    padding-top: 20px !important;
 }
 
 .swagger-section .operation {
@@ -1092,7 +1100,8 @@
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 600
+    z-index: 600;
+    border-right: 1px solid #e8eaeb;
 }
 
 @media (min-width: 992px) {
@@ -1507,6 +1516,10 @@ body {
     margin: 0 0 100px
 }
 
+.swagger-section .endpoint:nth-of-type(odd) {
+	background-color: #f3f3f4;
+}
+
 @media (min-width: 992px) {
     .swagger-section .endpoint + .endpoint, .swagger-section .endpoint:first-child {
         border-top: 1px solid rgba(0, 0, 0, .08)
@@ -1605,10 +1618,6 @@ body {
 }
 
 @media (min-width: 992px) {
-    .swagger-section #resources.samples-collapsed {
-        width: 130%;
-    }
-
     .swagger-section #resources.samples-collapsed a.toggle-samples .circle-icon:before {
         content: '\E0F8';
         font-family: budicon-font !important;
@@ -1782,7 +1791,6 @@ body {
 .swagger-section .swagger-ui-wrap .markdown ol li, .swagger-section .swagger-ui-wrap .markdown ul li {
     padding: 3px 0;
     line-height: 1.4em;
-    color: #333
 }
 
 .swagger-section .swagger-ui-wrap form.formtastic fieldset.inputs ol li.numeric input, .swagger-section .swagger-ui-wrap form.formtastic fieldset.inputs ol li.string input, .swagger-section .swagger-ui-wrap form.formtastic fieldset.inputs ol li.url input {
@@ -1978,19 +1986,19 @@ body {
 }
 
 .swagger-section .swagger-ui-wrap ul#resources li.resource .resource_header h2.resource_name {
-    padding: 20px 20px 0 20px;
+    padding: 20px;
     border-top: 1px solid rgba(0, 0, 0, .08);
+    width: 100%;
+    margin-bottom: 0;
+    background-color: #fff;
 }
 
-@media (min-width: 992px) {
-    .swagger-section .swagger-ui-wrap ul#resources li.resource .resource_header .resource_description {
-        width: 50%;
-    }
-}
 .swagger-section .swagger-ui-wrap ul#resources li.resource .resource_header .resource_description {
-    padding: 0 20px;
+    padding: 20px 10% 20px 20px;
     margin: 0;
-    color: #838991
+    color: #838991;
+    width: 100%;
+    background-color: #fff;
 }
 
 .swagger-section .swagger-ui-wrap ul#resources li.resource.active div.heading h2 a, .swagger-section .swagger-ui-wrap ul#resources li.resource:hover div.heading h2 a {
