@@ -1281,7 +1281,7 @@
 
 @media (min-width: 992px) {
     .swagger-section .sticky-nav [data-navigator] .item[data-selected] {
-        background: #f3f3f4;
+        background: #e4e4e7;
         font-weight: 700;
         color: #333
     }
