@@ -1,15 +1,15 @@
-<h4 class="sample-title" data-control data-toggle="collapse"
+<h4 class="sample-title {{#if collapsed}}collapsed{{/if}}" data-control data-toggle="collapse"
     data-target="#sample-{{id}}">{{type}} Sample</h4>
-<div data-content class="collapse in" id="sample-{{id}}">
+<div data-content class="collapse {{#unless collapsed}}in{{/unless}}" id="sample-{{id}}">
     <div class="snippet">
         <pre><code>{{sampleJSON}}</code></pre>
     </div>
 </div>
 
 {{#if signature}}
-    <h4 class="schema-title" data-control data-toggle="collapse"
+    <h4 class="schema-title {{#if collapsed}}collapsed{{/if}}" data-control data-toggle="collapse"
         data-target="#schema-{{id}}">{{type}} Schema</h4>
-    <div data-content class="collapse in" id="schema-{{id}}">
+    <div data-content class="collapse {{#unless collapsed}}in{{/unless}}" id="schema-{{id}}">
         <div class="description">
             {{{signature}}}
         </div>

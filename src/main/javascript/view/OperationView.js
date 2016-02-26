@@ -207,6 +207,7 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
     }
 
     if (signatureModel) {
+      signatureModel.collapsed = (this.model.method != 'get');
       responseSignatureView = new SwaggerUi.Views.SignatureView({
         model: signatureModel,
         router: this.router,
@@ -244,7 +245,8 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
       isParam: true,
       signature: param.signature,
       type: "Body",
-      id: this.parentId + '_' + this.nickname + '_body'
+      id: this.parentId + '_' + this.nickname + '_body',
+      collapsed: (this.model.method === 'get')
     };
     var signatureView = new SwaggerUi.Views.SignatureView({model: bodySample, tagName: 'div'});
     $('.model-signature', $(this.el)).append(signatureView.render().el);
