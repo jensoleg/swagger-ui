@@ -7,9 +7,9 @@
 </div>
 
 {{#if signature}}
-    <h4 class="schema-title {{#if collapsed}}collapsed{{/if}}" data-control data-toggle="collapse"
+    <h4 class="schema-title collapsed" data-control data-toggle="collapse"
         data-target="#schema-{{id}}">{{type}} Schema</h4>
-    <div data-content class="collapse {{#unless collapsed}}in{{/unless}}" id="schema-{{id}}">
+    <div data-content class="collapse" id="schema-{{id}}">
         <div class="description">
             {{{signature}}}
         </div>
