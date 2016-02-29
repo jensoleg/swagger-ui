@@ -69,12 +69,20 @@
     padding: 0;
 }
 
-.swagger-section .operations .samples {
+.swagger-section .operations .content:after, .swagger-section .operations .samples:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+}
+
+.swagger-section .operations .samples, .swagger-section .operations .samples:after {
     background-color: #5c666f;
 }
 
 .swagger-section .operations .content {
-    margin-top: 20px;
+    padding-top: 20px;
 }
 
 .swagger-section .operation {
@@ -82,10 +90,6 @@
 }
 
 @media (min-width: 992px) {
-    .swagger-section .operation {
-        min-height: 100vh
-    }
-
     .swagger-section .operation:after {
         clear: both
     }
@@ -97,21 +101,29 @@
 }
 
 @media (min-width: 992px) {
-    .swagger-section .operation > .content {
+    .swagger-section .operation > .content, .swagger-section .operation > .content:after {
         float: left;
         width: 50%;
-        padding: 0 10px
+    }
+
+    .swagger-section .operation > .content {
+        padding: 10px
+    }
+
+    .swagger-section .operation > .content:after {
+        padding: 0;
+        left: 0;
     }
 }
 
 @media (min-width: 1400px) {
     .swagger-section .operation > .content {
-        padding: 0 20px
+        padding: 20px
     }
 }
 
 @media (min-width: 992px) {
-    .swagger-section .operation > .samples {
+    .swagger-section .operation > .samples, .swagger-section .operations > .samples:after {
         float: left;
         width: 50%
     }
@@ -1543,8 +1555,12 @@ body {
     margin: 0 0 100px
 }
 
-.swagger-section .endpoint:nth-of-type(odd) {
+.swagger-section .endpoint:nth-of-type(odd) .content, .swagger-section .endpoint:nth-of-type(odd) .content:after {
 	background-color: #f3f3f4;
+}
+
+.swagger-section .endpoint:nth-of-type(even) .content, .swagger-section .endpoint:nth-of-type(even) .content:after {
+	background-color: #fff;
 }
 
 @media (min-width: 992px) {
@@ -1577,10 +1593,6 @@ body {
     .swagger-section #resources {
         width: 100%;
         transition: width 300ms
-    }
-
-    .swagger-section #resources .operation .content {
-        position: relative
     }
 
     .swagger-section #resources a.toggle-samples {
