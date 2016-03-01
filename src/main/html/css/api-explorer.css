@@ -1141,6 +1141,7 @@
     width: 100%;
     z-index: 600;
     border-right: 1px solid #e8eaeb;
+    padding-bottom: 40px;
 }
 
 @media (min-width: 992px) {
