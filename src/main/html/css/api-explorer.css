@@ -1457,7 +1457,7 @@ body {
 }
 
 #api2-explorer .modal {
-    background: rgba(244, 241, 241, .95)
+    background: rgba(0, 0, 0, 0.7)
 }
 
 #api2-explorer .modal h5 {
