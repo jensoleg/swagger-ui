@@ -287,7 +287,14 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
     form.find('input.required').each(function () {
       $(this).removeClass('error');
       if (jQuery.trim($(this).val()) === '') {
+        var formTop = $(this).parents('form').offset().top;
         $(this).addClass('error');
+        if ($('body').scrollTop() > formTop) {
+          // scroll the required fields into view
+          $('body').animate({
+            scrollTop: formTop
+          }, 200);
+        }
         $(this).wiggle({
           callback: (function (_this) {
             return function () {
