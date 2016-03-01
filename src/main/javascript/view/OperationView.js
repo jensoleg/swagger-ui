@@ -244,7 +244,7 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
       sampleJSON: param.sampleJSON,
       isParam: true,
       signature: param.signature,
-      type: "Body",
+      type: "Request",
       id: this.parentId + '_' + this.nickname + '_body',
       collapsed: (this.model.method === 'get')
     };
