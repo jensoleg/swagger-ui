@@ -15400,6 +15400,7 @@ Copyright (c) 2015 Daniel Eden
 }
 
 header.site-header.site-header {
+    display: none;
     z-index: 1000;
     background: transparent;
     font-size: 14px;
@@ -15454,7 +15455,6 @@ header.site-header.site-header nav .navbar-brand {
     width: 120px;
 }
 header.site-header.site-header nav .navbar-brand a {
-    background: url("../images/senodio.png") center left no-repeat;
     /*background-size: 76%;*/
     width: 130px;
     height: 40px;
@@ -17413,4 +17413,19 @@ li.L9 {
     .zopim {
         display: none;
     }
+}
+/* Overrides for content management*/
+li {
+    margin: 0px 0 !important;
+}
+.nav > li {
+    font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;
+}
+.container {
+    width: 100% !important;
+}
+.modal-dialog {
+    position: static !important;
+    width: auto !important;
+    max-width: 1000px !important;
 }

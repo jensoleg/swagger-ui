@@ -5,7 +5,7 @@ SwaggerUi.Views.SignatureView = Backbone.View.extend({
     'mousedown .snippet': 'snippetToTextArea'
   },
 
-  initialize: function () {
+  initialize: function (options) {
   },
 
   render: function () {

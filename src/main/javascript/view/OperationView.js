@@ -118,6 +118,34 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
       }
     }
 
+    contentTypeModel = {
+      isParam: false
+    };
+    contentTypeModel.consumes = this.model.consumes;
+    contentTypeModel.produces = this.model.produces;
+    ref3 = this.model.parameters;
+    for (n = 0, len2 = ref3.length; n < len2; n++) {
+      param = ref3[n];
+      type = param.type || param.dataType || '';
+      if (typeof type === 'undefined') {
+        schema = param.schema;
+        if (schema && schema.$ref) {
+          ref = schema.$ref;
+          if (ref.indexOf('#/definitions/') === 0) {
+            type = ref.substring('#/definitions/'.length);
+          } else {
+            type = ref;
+          }
+        }
+      }
+      if (type && type.toLowerCase() === 'file') {
+        if (!contentTypeModel.consumes) {
+          contentTypeModel.consumes = 'multipart/form-data';
+        }
+      }
+      param.type = type;
+    }
+
     if (typeof this.model.responses !== 'undefined') {
       this.model.responseMessages = [];
       ref2 = this.model.responses;
@@ -166,54 +194,8 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
         id: this.parentId + '_' + this.nickname
       };
     }
+
     $(this.el).html(Handlebars.templates.operation(this.model));
-    if (signatureModel) {
-      responseSignatureView = new SwaggerUi.Views.SignatureView({
-        model: signatureModel,
-        router: this.router,
-        tagName: 'div',
-        type: "Response",
-        id: this.parentId + '_' + this.nickname + '_response'
-      });
-      $('.model-signature', $(this.el)).append(responseSignatureView.render().el);
-    } else {
-      this.model.responseClassSignature = 'string';
-      $('.model-signature', $(this.el)).html(this.model.type);
-    }
-
-    contentTypeModel = {
-      isParam: false
-    };
-    contentTypeModel.consumes = this.model.consumes;
-    contentTypeModel.produces = this.model.produces;
-    ref3 = this.model.parameters;
-    for (n = 0, len2 = ref3.length; n < len2; n++) {
-      param = ref3[n];
-      type = param.type || param.dataType || '';
-      if (typeof type === 'undefined') {
-        schema = param.schema;
-        if (schema && schema.$ref) {
-          ref = schema.$ref;
-          if (ref.indexOf('#/definitions/') === 0) {
-            type = ref.substring('#/definitions/'.length);
-          } else {
-            type = ref;
-          }
-        }
-      }
-      if (type && type.toLowerCase() === 'file') {
-        if (!contentTypeModel.consumes) {
-          contentTypeModel.consumes = 'multipart/form-data';
-        }
-      }
-      param.type = type;
-    }
-    responseContentTypeView = new SwaggerUi.Views.ResponseContentTypeView({
-      model: contentTypeModel,
-      router: this.router
-    });
-
-    $('.response-content-type', $(this.el)).append(responseContentTypeView.render().el);
 
     ref4 = this.model.parameters;
     for (p = 0, len3 = ref4.length; p < len3; p++) {
@@ -224,6 +206,27 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
       }
     }
 
+    if (signatureModel) {
+      signatureModel.collapsed = (this.model.method != 'get');
+      responseSignatureView = new SwaggerUi.Views.SignatureView({
+        model: signatureModel,
+        router: this.router,
+        tagName: 'div',
+        type: "Response",
+        id: this.parentId + '_' + this.nickname + '_response'
+      });
+      $('.model-signature', $(this.el)).append(responseSignatureView.render().el);
+    } else {
+      this.model.responseClassSignature = 'string';
+      $('.model-signature', $(this.el)).append(this.model.type);
+    }
+
+    responseContentTypeView = new SwaggerUi.Views.ResponseContentTypeView({
+      model: contentTypeModel,
+      router: this.router
+    });
+
+    $('.response-content-type', $(this.el)).append(responseContentTypeView.render().el);
 
     ref5 = this.model.responseMessages;
     for (q = 0, len4 = ref5.length; q < len4; q++) {
@@ -242,7 +245,8 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
       isParam: true,
       signature: param.signature,
       type: "Body",
-      id: this.parentId + '_' + this.nickname + '_body'
+      id: this.parentId + '_' + this.nickname + '_body',
+      collapsed: (this.model.method === 'get')
     };
     var signatureView = new SwaggerUi.Views.SignatureView({model: bodySample, tagName: 'div'});
     $('.model-signature', $(this.el)).append(signatureView.render().el);
@@ -329,7 +333,11 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
       for (m = 0, len1 = ref2.length; m < len1; m++) {
         o = ref2[m];
         if ((o.value !== null) && jQuery.trim(o.value).length > 0) {
-          map[o.name] = o.value;
+          if (o.className && (o.className.includes('array-parameter'))) {
+            map[o.name] = o.value.split(/\n/);
+          } else {
+            map[o.name] = o.value;
+          }
         }
       }
       ref3 = form.find('select');
@@ -346,6 +354,18 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
       if (isFileUpload) {
         return this.handleFileUpload(map, form);
       } else {
+        var mockOpts = {mock: true};
+        var opt, obj;
+
+        for (opt in opts) {
+          mockOpts[opt] = opts[opt];
+        }
+
+        obj = this.model['do'](map, mockOpts);
+        this.showHeaderParams(obj.headers);
+
+        this.showCurlCommand(this.model.asCurl(map, mockOpts));
+
         return this.model['do'](map, opts, this.showCompleteStatus, this.showErrorStatus, this);
       }
     }
@@ -427,6 +447,8 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
       })(this),
       complete: (function (_this) {
         return function (data) {
+          _this.showHeaderParams(headerParams);
+          _this.showCurlCommand(null);
           return _this.showCompleteStatus(_this.wrap(data), _this);
         };
       })(this)
@@ -497,6 +519,27 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
   showCompleteStatus: function (data, parent) {
     $('#modal-' + parent.parentId + '_' + parent.nickname).modal();
     parent.showStatus(data);
+  },
+
+  // show the curl command
+  showCurlCommand: function (curl) {
+    if (!curl) {
+      $('.curl_command, .curl_prompt', $(this.el)).hide();
+    } else {
+      $('.curl_command', $(this.el)).html('<pre></pre>');
+      $('.curl_command pre', $(this.el)).text(curl);
+      $('.curl_command, .curl_prompt', $(this.el)).show();
+    }
+  },
+
+  // show the header params
+  showHeaderParams: function (headerParams) {
+    if ($.isEmptyObject(headerParams)) {
+      $('.request_headers, .request_headers_prompt', $(this.el)).hide();
+    } else {
+      $('.request_headers', $(this.el)).html('<pre>' + _.escape(JSON.stringify(headerParams, null, '  ')).replace(/\n/g, '<br>') + '</pre>');
+      $('.request_headers, .request_headers_prompt', $(this.el)).show();
+    }
   },
 
   // Adapted from http://stackoverflow.com/a/2893259/454004

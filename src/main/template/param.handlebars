@@ -18,6 +18,9 @@
             {{#if type}}
                 <code class="code-signature">{{type}}</code>
             {{/if}}
+            {{#if in}}
+                <div class="parameter-location">in {{in}}</div>
+            {{/if}}
             <div class="markdown">{{description}}</div>
         </div>
     {{else}}
@@ -29,15 +32,18 @@
             </label>
             <div class="parameter-content-type"/>
         {{else}}
-            {{#if default}}
-                <input class='parameter form-control' minlength='0' name='{{name}}' placeholder='' type='{{inputType}}' value='{{default}}'  data-toggle="tooltip" data-placement="right" title="" data-original-title='{{name}}'/>
+            {{#if isArray}}
+                <textarea class='parameter form-control array-parameter' minlength='0' name='{{name}}' placeholder='provide multiple values separated by newlines' type='{{inputType}}' data-toggle="tooltip" data-placement="right" title="" data-original-title='{{name}}'>{{default}}</textarea>
             {{else}}
-                <input class='parameter form-control' minlength='0' name='{{name}}' placeholder='' type='{{inputType}}' value=''  data-toggle="tooltip" data-placement="right" title="" data-original-title='{{name}}'/>
+                <input class='parameter form-control' minlength='0' name='{{name}}' placeholder='' type='{{inputType}}' value='{{default}}' data-toggle="tooltip" data-placement="right" title="" data-original-title='{{name}}'/>
             {{/if}}
         {{/if}}
         <div class="small-description">
             {{#if type}}
                 <code class="code-signature">{{type}}</code>
+            {{/if}}
+            {{#if in}}
+                <div class="parameter-location">in {{in}}</div>
             {{/if}}
             <div class="markdown">{{description}}</div>
         </div>
