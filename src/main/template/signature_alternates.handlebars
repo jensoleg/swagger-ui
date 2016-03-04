@@ -1,0 +1,13 @@
+<form id="{{id}}" class="polymorphic">
+    <select class="alternatives form-control">
+        {{#each alternates}}
+            <option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{name}}{{#if selected}} *{{/if}}</option>
+        {{/each}}
+    </select>
+
+    {{#each alternates}}
+        <div class="alternate alternate_{{id}}">
+            {{{content}}}
+        </div>
+    {{/each}}
+</form>
