@@ -244,22 +244,14 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
 
     for (var prop in model.definition.properties) {
       var defn = model.definition.properties[prop];
-      var ref = (defn.type == 'array' && defn.items ? defn.items.$ref : defn.$ref);
+      var ref = (defn.type === 'array' && defn.items ? defn.items.$ref : defn.$ref);
 
-      if (ref && ref.indexOf('#/definitions/') == 0) {
+      if (ref && ref.indexOf('#/definitions/') === 0) {
         var type = ref.substring('#/definitions/'.length);
-        var subclasses = this.findSubclasses(model.models, ref);
+        var subclasses = this.findSubclasses(model.models, type, 0);
+
         if (subclasses.length > 1) {
-          polymorphic[type] = subclasses.sort(function(model1, model2) {
-            return model1.name.localeCompare(model2.name)
-          }).map(function(model) {
-            return {
-              id: model.definition.id,
-              name: model.name,
-              selected: (model.name == type),
-              content: model.getMockSignature()
-            };
-          });
+          polymorphic[type] = subclasses;
         }
       }
     }
@@ -267,17 +259,28 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
     return polymorphic;
   },
 
-  findSubclasses: function (models, target) {
+  findSubclasses: function (models, type, depth) {
     var subclasses = [];
+    var model = models[type];
+    var ref = '#/definitions/' + type;
 
     for (var modelName in models) {
-      var model = models[modelName];
-      var resolved = model.definition && model.definition['x-resolved-from'];
+      if (modelName != type) {
+        var subModel = models[modelName];
+        var resolved = subModel.definition && subModel.definition['x-resolved-from'];
 
-      if (resolved && resolved.includes(target)) {
-        subclasses.push(model);
+        if (resolved && resolved.includes(ref)) {
+          subclasses = subclasses.concat(this.findSubclasses(models, modelName, depth+1));
+        }
       }
     }
+
+    subclasses.unshift({
+      id: model.definition.id,
+      name: model.name,
+      depth: depth,
+      content: model.getMockSignature()
+    });
 
     return subclasses;
   },

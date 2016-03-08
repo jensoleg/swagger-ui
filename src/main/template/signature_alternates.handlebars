@@ -1,9 +1,23 @@
 <form id="{{id}}" class="polymorphic">
-    <select class="alternatives form-control">
-        {{#each alternates}}
-            <option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{name}}{{#if selected}} *{{/if}}</option>
-        {{/each}}
-    </select>
+    <span class="model">
+        <div>
+            <span class="propLabels">
+                <span class="propType" title="{{type}}">
+                    {{type}}
+                </span>
+                <span class="propPolymorphic">
+                    polymorphic
+                </span>
+            </span>
+            <span class="propDesc">
+                <select class="alternatives form-control">
+                    {{#each alternates}}
+                        <option value="{{id}}" {{#if @first}}selected="selected"{{/if}}>{{#times depth}}&nbsp; {{/times}}{{name}}</option>
+                    {{/each}}
+                </select>
+            </span>
+        </div>
+    </span>
 
     {{#each alternates}}
         <div class="alternate alternate_{{id}}">

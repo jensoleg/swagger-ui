@@ -23,23 +23,16 @@ SwaggerUi.Views.SignatureView = Backbone.View.extend({
   wrapPolymorphic: function () {
     for (var type in this.model.polymorphic) {
       var alternates  = this.model.polymorphic[type];
-      var defaultAlternate = alternates.find(function(alt) {
-        return alt.selected;
-      });
-      if (defaultAlternate == null) {
-        defaultAlternate = {};
-      }
-
       var id = this.model.id + '-' + type;
       var master = $(this.el).find("span.strong:contains('" + type + "')").closest('span.model');
       var newMaster = Handlebars.templates.signature_alternates({
         id: id,
-        name: this.model.name,
+        type: type,
         alternates: alternates,
       });
       var replacement = master.replaceWith(newMaster);
 
-      this.showAlternate($(this.el).find('form.polymorphic#' + id), defaultAlternate.id);
+      this.showAlternate($(this.el).find('form.polymorphic#' + id), alternates[0].id);
     }
   },
 

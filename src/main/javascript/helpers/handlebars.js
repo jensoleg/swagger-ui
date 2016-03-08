@@ -5,3 +5,11 @@ Handlebars.registerHelper('sanitize', function(html) {
     html = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
     return new Handlebars.SafeString(html);
 });
+Handlebars.registerHelper('times', function(n, html) {
+  var sum = '';
+
+  for (var i = 0; i < n; i++) {
+    sum += html.fn(i);
+  }
+  return sum;
+});
