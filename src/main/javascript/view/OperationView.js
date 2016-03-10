@@ -181,8 +181,10 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
             isParam: false,
             signature: value.getMockSignature(),
             type: "Response",
-            id: this.parentId + '_' + this.nickname + '_succes'
+            id: this.parentId + '_' + this.nickname + '_succes',
+            polymorphic: this.assemblePolymorphics(value)
           };
+
         }
       }
     } else if (this.model.responseClassSignature && this.model.responseClassSignature !== 'string') {
@@ -237,6 +239,52 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
     return this;
   },
 
+  assemblePolymorphics: function (model) {
+    var polymorphic = {};
+
+    for (var prop in model.definition.properties) {
+      var defn = model.definition.properties[prop];
+      var ref = (defn.type === 'array' && defn.items ? defn.items.$ref : defn.$ref);
+
+      if (ref && ref.indexOf('#/definitions/') === 0) {
+        var type = ref.substring('#/definitions/'.length);
+        var subclasses = this.findSubclasses(model.models, type, 0);
+
+        if (subclasses.length > 1) {
+          polymorphic[type] = subclasses;
+        }
+      }
+    }
+
+    return polymorphic;
+  },
+
+  findSubclasses: function (models, type, depth) {
+    var subclasses = [];
+    var model = models[type];
+    var ref = '#/definitions/' + type;
+
+    for (var modelName in models) {
+      if (modelName != type) {
+        var subModel = models[modelName];
+        var resolved = subModel.definition && subModel.definition['x-resolved-from'];
+
+        if (resolved && resolved.includes(ref)) {
+          subclasses = subclasses.concat(this.findSubclasses(models, modelName, depth+1));
+        }
+      }
+    }
+
+    subclasses.unshift({
+      id: model.definition.id,
+      name: model.name,
+      depth: depth,
+      content: model.getMockSignature()
+    });
+
+    return subclasses;
+  },
+
   addBodyModel: function (param) {
     if (param.type === 'file') return;
 
@@ -248,6 +296,16 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
       id: this.parentId + '_' + this.nickname + '_body',
       collapsed: (this.model.method === 'get')
     };
+
+    var ref = param.schema.$ref;
+    if (ref && ref.indexOf('#/definitions/') === 0) {
+      var type = ref.substring('#/definitions/'.length);
+      var model = this.model.models[type];
+      if (model) {
+        bodySample.polymorphic = this.assemblePolymorphics(model);
+      }
+    }
+
     var signatureView = new SwaggerUi.Views.SignatureView({model: bodySample, tagName: 'div'});
     $('.model-signature', $(this.el)).append(signatureView.render().el);
   },

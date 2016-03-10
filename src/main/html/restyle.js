@@ -2,7 +2,7 @@ $(document).ready(function() {
 
   /* Bootstrapping */
 
-  var targetContainerClass = '.model-signature .description';
+  var targetContainerClass = '.model-signature .description .model';
 
   waitUntilModelSignatureElementsExist();
 

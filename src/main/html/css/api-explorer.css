@@ -430,32 +430,32 @@
     }
 }
 
-.swagger-section .operations .model-signature .description > div {
+.swagger-section .operations .model-signature .description .model > div {
     margin: 0;
     padding: 15px 20px
 }
 
-.swagger-section .operations .model-signature .description > div:after {
+.swagger-section .operations .model-signature .description .model > div:after {
     clear: both
 }
 
-.swagger-section .operations .model-signature .description > div:after, .swagger-section .operations .model-signature .description > div:before {
+.swagger-section .operations .model-signature .description .model > div:after, .swagger-section .operations .model-signature .description .model > div:before {
     content: "";
     display: table
 }
 
 @media (min-width: 1400px) {
-    .swagger-section .operations .model-signature .description > div {
+    .swagger-section .operations .model-signature .description .model > div {
         padding: 15px 30px
     }
 }
 
-.swagger-section .operations .model-signature .description > div + div {
+.swagger-section .operations .model-signature .description .model > div + div {
     border-top: 1px solid #717d88
 }
 
 @media (min-width: 992px) {
-    .swagger-section .operations .model-signature .description > div + div {
+    .swagger-section .operations .model-signature .description .model > div + div {
         border-top: 1px solid #5c666f
     }
 }
