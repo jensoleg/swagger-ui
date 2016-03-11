@@ -269,7 +269,7 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
         var subModel = models[modelName];
         var resolved = subModel.definition && subModel.definition['x-resolved-from'];
 
-        if (resolved && resolved.includes(ref)) {
+        if (resolved && resolved.indexOf(ref) != -1) {
           subclasses = subclasses.concat(this.findSubclasses(models, modelName, depth+1));
         }
       }
