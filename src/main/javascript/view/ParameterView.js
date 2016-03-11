@@ -1,22 +1,31 @@
 'use strict';
 
 SwaggerUi.Views.ParameterView = Backbone.View.extend({
+  events: {
+    'change [name=parameterContentType]' : 'toggleParameterSnippet'
+  },
+
   initialize: function(){
+    console.log('ParameterView::initialize');
     Handlebars.registerHelper('isArray', function(param, opts) {
       if (param.type.toLowerCase() === 'array' || param.allowMultiple) {
-        opts.fn(this);
+        return opts.fn(this);
       } else {
-        opts.inverse(this);
+        return opts.inverse(this);
       }
     });
   },
 
   render: function() {
     var type = this.model.type || this.model.dataType;
+    var modelType = this.model.modelSignature.type;
+    var modelDefinitions = this.model.modelSignature.definitions;
+    var schema = this.model.schema || {};
+    var consumes = this.model.consumes || [];
+
 
     if (typeof type === 'undefined') {
-      var schema = this.model.schema;
-      if (schema && schema.$ref) {
+      if (schema.$ref) {
         var ref = schema.$ref;
         if (ref.indexOf('#/definitions/') === 0) {
           type = ref.substring('#/definitions/'.length);
@@ -30,7 +39,14 @@ SwaggerUi.Views.ParameterView = Backbone.View.extend({
     this.model.paramType = this.model.in || this.model.paramType;
     this.model.isBody = this.model.paramType === 'body' || this.model.in === 'body';
     this.model.isFile = type && type.toLowerCase() === 'file';
-    this.model.default = (this.model.default || this.model.defaultValue);
+
+    // Allow for default === false
+    if(typeof this.model.default === 'undefined') {
+      this.model.default = this.model.defaultValue;
+    }
+
+    this.model.hasDefault = (typeof this.model.default !== 'undefined');
+    this.model.valueId = 'm' + this.model.name + Math.random();
 
     if(this.model.format === 'password') {
         this.model.inputType = 'password';
@@ -42,10 +58,64 @@ SwaggerUi.Views.ParameterView = Backbone.View.extend({
       this.model.isList = true;
     }
 
+    var isXML = this.contains(consumes, 'xml');
+    var isJSON = isXML ? this.contains(consumes, 'json') : true;
+
     var template = this.template();
     $(this.el).html(template(this.model));
 
+    var signatureModel = {
+      sampleJSON: isJSON ? SwaggerUi.partials.signature.createParameterJSONSample(modelType, modelDefinitions) : false,
+      sampleXML: isXML ? SwaggerUi.partials.signature.createXMLSample(schema, modelDefinitions, true) : false,
+      isParam: true,
+      signature: SwaggerUi.partials.signature.getParameterModelSignature(modelType, modelDefinitions),
+      defaultRendering: this.model.defaultRendering,
+      type: this.model.name,
+      id: this.options.parentView.parentId + '_' + this.options.parentView.nickname + '_' + this.model.name
+    };
+
+    var modelContainer = this.modelContainer();
+    //var modelContainer = $('.model-signature', $(this.el));
+
+    if (this.model.sampleJSON) {
+      var signatureView = new SwaggerUi.Views.SignatureView({model: signatureModel, tagName: 'div', parameterView: this});
+      modelContainer.append(signatureView.render().el);
+    }
+    else {
+      modelContainer.html(this.model.signature);
+    }
+
     var isParam = false;
+
+    if( this.options.swaggerOptions.jsonEditor && this.model.isBody && this.model.schema){
+      var $self = $(this.el);
+      this.model.jsonEditor =
+        /* global JSONEditor */
+        new JSONEditor($('.editor_holder', $self)[0],
+                       {schema: this.model.schema, startval : this.model.default,
+                        ajax:true,
+                        disable_properties:true,
+                        disable_edit_json:true,
+                        iconlib: 'swagger' });
+      // This is so that the signature can send back the sample to the json editor
+      // TODO: SignatureView should expose an event "onSampleClicked" instead
+      signatureModel.jsonEditor = this.model.jsonEditor;
+      $('.body-textarea', $self).hide();
+      $('.editor_holder', $self).show();
+      $('.parameter-content-type', $self)
+        .change(function(e){
+            if(e.target.value === 'application/xml'){
+              $('.body-textarea', $self).show();
+              $('.editor_holder', $self).hide();
+              this.model.jsonEditor.disable();
+            }
+            else {
+              $('.body-textarea', $self).hide();
+              $('.editor_holder', $self).show();
+              this.model.jsonEditor.enable();
+            }
+        });
+      }
 
     if (this.model.isBody) {
       isParam = true;
@@ -60,14 +130,58 @@ SwaggerUi.Views.ParameterView = Backbone.View.extend({
     if (isParam) {
       var parameterContentTypeView = new SwaggerUi.Views.ParameterContentTypeView({model: contentTypeModel});
       $('.parameter-content-type', $(this.el)).append(parameterContentTypeView.render().el);
+      this.toggleParameterSnippet();
     }
 
     else {
+      //BINTAL Review - .response-content-type doesn't ever exist, so nothing is ever attached here
       var responseContentTypeView = new SwaggerUi.Views.ResponseContentTypeView({model: contentTypeModel});
       $('.response-content-type', $(this.el)).append(responseContentTypeView.render().el);
+      this.toggleResponseSnippet();
     }
 
     return this;
+  },
+  modelContainer: function(response) {
+    var parentQuery = response ? '.model-signature > .response-signature' : '.model-signature > .body-signature';
+    return (this.model.paramType === 'body' || this.model.in === 'body') && this.options.parentView && $(parentQuery, $(this.options.parentView.el)).length > 0
+        ? $(parentQuery, $(this.options.parentView.el))
+        : $('.model-signature', $(this.el));
+  },
+  contains: function (consumes, type) {
+    if (typeof consumes === 'string') {
+      consumes = [consumes];
+    }
+    return consumes.filter(function (val) {
+      if (val.indexOf(type) > -1) {
+        return true;
+      }
+    }).length;
+  },
+
+  toggleParameterSnippet: function () {
+    var contentType = this.$('[name=parameterContentType]').val();
+
+    this.toggleSnippet(contentType);
+  },
+
+  toggleResponseSnippet: function () {
+    var contentEl = this.$('[name=responseContentType]');
+
+    if (!contentEl.length) { return; }
+
+    this.toggleSnippet(contentEl.val(), true);
+  },
+
+  toggleSnippet: function (type, response) {
+    var modelContainer = this.modelContainer(response);
+    var xmlSnippetTab = $('.nav li.xml-tab > a', modelContainer);
+    var jsonSnippetTab = $('.nav li.json-tab > a', modelContainer);
+    if (type.indexOf('xml') > -1) {
+      xmlSnippetTab.tab('show');
+    } else {
+      jsonSnippetTab.tab('show');
+    }
   },
 
   // Return an appropriate template based on if the parameter is a list, readonly, required

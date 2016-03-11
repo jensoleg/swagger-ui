@@ -82,7 +82,7 @@
 .swagger-section pre .vhdl .attribute,
 .swagger-section pre .clojure .attribute,
 .swagger-section pre .coffeescript .property {
-  color: #8888ff;
+  color: #88F;
 }
 .swagger-section pre .keyword,
 .swagger-section pre .id,
@@ -126,6 +126,7 @@
   max-width: 960px;
   margin-left: auto;
   margin-right: auto;
+  /* JSONEditor specific styling */
 }
 .swagger-section .swagger-ui-wrap b,
 .swagger-section .swagger-ui-wrap strong {
@@ -274,6 +275,9 @@
   font-weight: bold;
   font-size: 25px;
 }
+.swagger-section .swagger-ui-wrap .footer {
+  margin-top: 20px;
+}
 .swagger-section .swagger-ui-wrap p.big,
 .swagger-section .swagger-ui-wrap div.big p {
   font-size: 1em;
@@ -361,6 +365,7 @@
 }
 .swagger-section .swagger-ui-wrap .model-signature ul.signature-nav {
   display: block;
+  min-width: 230px;
   margin: 0;
   padding: 0;
 }
@@ -423,6 +428,17 @@
 .swagger-section .swagger-ui-wrap .model-signature .description .propWrap .optionsWrapper .optionName {
   font-weight: bold;
 }
+.swagger-section .swagger-ui-wrap .model-signature .description .propDesc.markdown > p:first-child,
+.swagger-section .swagger-ui-wrap .model-signature .description .propDesc.markdown > p:last-child {
+  display: inline;
+}
+.swagger-section .swagger-ui-wrap .model-signature .description .propDesc.markdown > p:not(:first-child):before {
+  display: block;
+  content: '';
+}
+.swagger-section .swagger-ui-wrap .model-signature .description span:last-of-type.propDesc.markdown > p:only-child {
+  margin-right: -3px;
+}
 .swagger-section .swagger-ui-wrap .model-signature .propName {
   font-weight: bold;
 }
@@ -443,6 +459,17 @@
 }
 .swagger-section .swagger-ui-wrap .required {
   font-weight: bold;
+}
+.swagger-section .swagger-ui-wrap .editor_holder {
+  font-family: "Anonymous Pro", "Menlo", "Consolas", "Bitstream Vera Sans Mono", "Courier New", monospace;
+  font-size: 0.9em;
+}
+.swagger-section .swagger-ui-wrap .editor_holder label {
+  font-weight: normal!important;
+  /* JSONEditor uses bold by default for all labels, we revert that back to normal to not give the impression that by default fields are required */
+}
+.swagger-section .swagger-ui-wrap .editor_holder label.required {
+  font-weight: bold!important;
 }
 .swagger-section .swagger-ui-wrap input.parameter {
   width: 300px;
@@ -698,6 +725,9 @@
   color: black;
   text-decoration: none;
 }
+.swagger-section .swagger-ui-wrap ul#resources li.resource ul.endpoints li.endpoint ul.operations li.operation div.heading h3 span.path a.toggleOperation.deprecated {
+  text-decoration: line-through;
+}
 .swagger-section .swagger-ui-wrap ul#resources li.resource ul.endpoints li.endpoint ul.operations li.operation div.heading h3 span.path a:hover {
   text-decoration: underline;
 }
@@ -792,6 +822,9 @@
 .swagger-section .swagger-ui-wrap ul#resources li.resource ul.endpoints li.endpoint ul.operations li.operation div.content form input[type='text'].error {
   outline: 2px solid black;
   outline-color: #cc0000;
+}
+.swagger-section .swagger-ui-wrap ul#resources li.resource ul.endpoints li.endpoint ul.operations li.operation div.content form select[name='parameterContentType'] {
+  max-width: 300px;
 }
 .swagger-section .swagger-ui-wrap ul#resources li.resource ul.endpoints li.endpoint ul.operations li.operation div.content div.response div.block pre {
   font-family: "Anonymous Pro", "Menlo", "Consolas", "Bitstream Vera Sans Mono", "Courier New", monospace;
@@ -1066,6 +1099,9 @@
 .swagger-section .swagger-ui-wrap form.form_box p strong {
   color: black;
 }
+.swagger-section .swagger-ui-wrap .operation-status td.markdown > p:last-child {
+  padding-bottom: 0;
+}
 .swagger-section .title {
   font-style: bold;
 }
@@ -1104,14 +1140,14 @@
   font-size: 24px;
   padding: 10px 0;
 }
-.swagger-section .api-popup-dialog p.error-msg {
+.swagger-section .api-popup-dialog .error-msg {
   padding-left: 5px;
   padding-bottom: 5px;
 }
-.swagger-section .api-popup-dialog button.api-popup-authbtn {
+.swagger-section .api-popup-dialog .api-popup-authbtn {
   height: 30px;
 }
-.swagger-section .api-popup-dialog button.api-popup-cancel {
+.swagger-section .api-popup-dialog .api-popup-cancel {
   height: 30px;
 }
 .swagger-section .api-popup-scopes {
@@ -1121,13 +1157,13 @@
   padding: 5px 0;
   line-height: 20px;
 }
-.swagger-section .api-popup-scopes .api-scope-desc {
-  padding-left: 20px;
-  font-style: italic;
-}
 .swagger-section .api-popup-scopes li input {
   position: relative;
   top: 2px;
+}
+.swagger-section .api-popup-scopes .api-scope-desc {
+  padding-left: 20px;
+  font-style: italic;
 }
 .swagger-section .api-popup-actions {
   padding-top: 10px;

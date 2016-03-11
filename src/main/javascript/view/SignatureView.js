@@ -2,10 +2,12 @@
 
 SwaggerUi.Views.SignatureView = Backbone.View.extend({
   events: {
-    'mousedown .snippet': 'snippetToTextArea'
+    'mousedown .snippet_json'          : 'jsonSnippetMouseDown',
+    'mousedown .snippet_xml'          : 'xmlSnippetMouseDown'
   },
 
   initialize: function () {
+    console.log('SignatureView::initialize');
   },
 
   render: function () {
@@ -15,16 +17,34 @@ SwaggerUi.Views.SignatureView = Backbone.View.extend({
   },
 
   // handler for snippet to text area
-  snippetToTextArea: function (e) {
-    if (this.isParam) {
-      if (e) {
-        e.preventDefault();
-      }
+  snippetToTextArea: function(val) {
+    if (this.options.parameterView) {
+      var textArea = $('textarea', $(this.options.parameterView.el));
 
-      var textArea = $('textarea', $(this.el.parentNode.parentNode.parentNode));
-      if ($.trim(textArea.val()) === '') {
-        textArea.val(this.model.sampleJSON);
+      // Fix for bug in IE 10/11 which causes placeholder text to be copied to "value"
+      if ($.trim(textArea.val()) === '' || textArea.prop('placeholder') === textArea.val()) {
+        textArea.val(val);
+        // TODO move this code outside of the view and expose an event instead
+        if( this.model.jsonEditor && this.model.jsonEditor.isEnabled()){
+          this.model.jsonEditor.setValue(JSON.parse(this.model.sampleJSON));
+        }
       }
+    }
+  },
+
+  jsonSnippetMouseDown: function (e) {
+    if (this.model.isParam) {
+      if (e) { e.preventDefault(); }
+
+      this.snippetToTextArea(this.model.sampleJSON);
+    }
+  },
+
+  xmlSnippetMouseDown: function (e) {
+    if (this.model.isParam) {
+      if (e) { e.preventDefault(); }
+
+      this.snippetToTextArea(this.model.sampleXML);
     }
   }
 });

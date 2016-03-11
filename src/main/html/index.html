@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Swagger explorer</title>
+    <meta charset="UTF-8">
+    <title>Swagger UI</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32"/>
+    <link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16"/>
+    <link href='css/typography.css' media='screen' rel='stylesheet' type='text/css'/>
     <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
     <!--style type="text/css"></style-->
@@ -18,10 +22,13 @@
     <script src='lib/jquery.wiggle.min.js' type='text/javascript'></script>
     <script src='lib/jquery.ba-bbq.min.js' type='text/javascript'></script>
     <script src='lib/handlebars-2.0.0.js' type='text/javascript'></script>
-    <script src='lib/underscore-min.js' type='text/javascript'></script>
+    <script src='lib/js-yaml.min.js' type='text/javascript'></script>
+    <script src='lib/lodash.min.js' type='text/javascript'></script>
+    <!--<script src='lib/underscore-min.js' type='text/javascript'></script>-->
     <script src='lib/backbone-min.js' type='text/javascript'></script>
     <script src='swagger-ui.js' type='text/javascript'></script>
     <script src='lib/highlight.7.3.pack.js' type='text/javascript'></script>
+    <script src='lib/jsoneditor.min.js' type='text/javascript'></script>
     <script src='lib/marked.js' type='text/javascript'></script>
     <script src='lib/swagger-oauth.js' type='text/javascript'></script>
     <script src='lib/bootstrap.min.js' type='text/javascript'></script>
@@ -47,6 +54,10 @@
                 url = "http://petstore.swagger.io/v2/swagger.json";
             }
 
+            // Pre load translate...
+            if (window.SwaggerTranslator) {
+                window.SwaggerTranslator.translate();
+            }
             window.swaggerUi = new SwaggerUi({
                 url: url,
                 dom_id: "swagger-ui-container",
@@ -62,6 +73,9 @@
 
                     }
 
+                    if (window.SwaggerTranslator) {
+                        window.SwaggerTranslator.translate();
+                    }
                     $('pre code').each(function (i, e) {
                         hljs.highlightBlock(e)
                     });
@@ -81,7 +95,10 @@
                     log("Unable to Load SwaggerUI");
                 },
                 docExpansion: "none",
-                sorter: "alpha"
+                //jsonEditor: false,
+                apisSorter: "alpha"//,
+                //defaultModelRendering: 'schema',
+                //showRequestHeaders: false
             });
 
             function addApiKeyAuthorization() {
@@ -116,6 +133,9 @@
 
             $(window).scroll(function () {
                 var sticky = $(".sticky-nav");
+                if (!sticky || sticky.length === 0) {
+                    return;
+                }
 
                 i(sticky);
                 r(sticky);
@@ -148,10 +168,10 @@
                     var nav = e.find("[data-navigator]");
                     if (nav.find("[data-endpoint][data-selected]").length) {
                         var o = nav.find("[data-endpoint][data-selected]"),
-                            a = $("#" + o.attr("data-endpoint")),
-                            s = a.offset().top,
-                            l = (s + a.outerHeight(), r("next")),
-                            u = r("prev");
+                                a = $("#" + o.attr("data-endpoint")),
+                                s = a.offset().top,
+                                l = (s + a.outerHeight(), r("next")),
+                                u = r("prev");
                         if (l.length) {
                             {
                                 var d = $("#" + l.attr("data-endpoint")), f = d.offset().top;
@@ -161,7 +181,7 @@
                         }
                         if (u.length) {
                             var p = $("#" + u.attr("data-endpoint")),
-                            g = u.offset().top;
+                                    g = u.offset().top;
                             v = (g + p.outerHeight(), 100);
                             i() < s - v && c(u)
                         }
@@ -170,7 +190,7 @@
 
                 function s() {
                     var e = $(".sticky-nav [data-navigator]"),
-                        n = e.find("[data-endpoint]").first();
+                            n = e.find("[data-endpoint]").first();
                     n.attr("data-selected", "");
                     u.find("[data-selected-value]").html(n.text())
                 }
@@ -180,11 +200,13 @@
                         var n = $(".sticky-nav [data-navigator]");
                         $("#" + e.attr("data-endpoint"))
                     }
-                    n.find("[data-resource]").removeClass("active");
-                    n.find("[data-selected]").removeAttr("data-selected");
-                    e.closest("[data-resource]").addClass("active");
-                    e.attr("data-selected", "");
-                    sticky.find("[data-selected-value]").html(e.text())
+                    if (!n.attr('data-scrolling')) {
+                        n.find("[data-resource]").removeClass("active");
+                        n.find("[data-selected]").removeAttr("data-selected");
+                        e.closest("[data-resource]").addClass("active");
+                        e.attr("data-selected", "");
+                        sticky.find("[data-selected-value]").html(e.text());
+                    }
                 }
             });
 

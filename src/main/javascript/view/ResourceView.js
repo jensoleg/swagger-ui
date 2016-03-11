@@ -2,6 +2,7 @@
 
 SwaggerUi.Views.ResourceView = Backbone.View.extend({
   initialize: function (opts) {
+    console.log('ResourceView::initialize');
     opts = opts || {};
     this.router = opts.router;
     this.auths = opts.auths;
@@ -33,6 +34,7 @@ SwaggerUi.Views.ResourceView = Backbone.View.extend({
 
       operation.nickname = id;
       operation.parentId = this.model.id;
+      operation.definitions = this.model.definitions; // make Json Schema available for JSonEditor in this operation
       this.addOperation(operation);
     }
 

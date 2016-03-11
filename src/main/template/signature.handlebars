@@ -1,17 +1,55 @@
-<h4 class="sample-title" data-control data-toggle="collapse"
-    data-target="#sample-{{id}}">{{type}} Sample</h4>
-<div data-content class="collapse in" id="sample-{{id}}">
-    <div class="snippet">
-        <pre><code>{{sampleJSON}}</code></pre>
-    </div>
-</div>
+<div class="signature-container">
+    <h4 class="sample-title" data-control data-toggle="collapse"
+        data-target="#signature-{{id}}">{{type}}</h4>
+    <div data-content class="collapse in" id="signature-{{id}}">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="dropdown active">
+                <a id="sample_{{id}}_dropdown" href="#sample_{{id}}_pane" class="dropdown-toggle" data-toggle="dropdown"
+                   aria-controls="sample_{{id}}_pane" role="tab">Sample</a>
+                <ul class="dropdown-menu" aria-labelledby="sample_{{id}}_dropdown">
+                    {{#if sampleJSON}}
+                        <li role="presentation" class="active json-tab">
+                            <a class="btn" href="#sample_{{id}}_json" aria-controls="json-signature" role="tab"
+                               data-toggle="tab">JSON</a>
+                        </li>
+                    {{/if}}
+                    {{#if sampleXML}}
+                        <li role="presentation" class="{{#unless sampleJSON}}active {{/unless}} xml-tab">
+                            <a class="btn" href="#sample_{{id}}_xml" aria-controls="xml-signature" role="tab"
+                               data-toggle="tab">XML</a>
+                        </li>
+                    {{/if}}
+                </ul>
+            </li>
+            {{#if signature}}
+                <li role="presentation" class="">
+                    <a href="#schema_{{id}}_pane" aria-controls="json-signature" role="tab" data-toggle="tab">Schema</a>
+                </li>
+            {{/if}}
+        </ul>
 
-{{#if signature}}
-    <h4 class="schema-title collapsed" data-control data-toggle="collapse"
-        data-target="#schema-{{id}}">{{type}} Schema</h4>
-    <div data-content class="collapse" id="schema-{{id}}">
-        <div class="description">
-            {{{signature}}}
+        <div class="tab-content">
+            {{#if sampleJSON}}
+                <div role="tabpanel" class="snippet_json tab-pane active" id="sample_{{id}}_json">
+                    <pre><code>{{sampleJSON}}</code></pre>
+                    <div class="body-type-label"><span class="label label-default">JSON</span></div>
+                </div>
+            {{/if}}
+            {{#if sampleXML}}
+                <div role="tabpanel" class="snippet_xml tab-pane {{#unless sampleJSON}}active{{/unless}}"
+                     id="sample_{{id}}_xml">
+                    <pre><code>{{sampleXML}}</code></pre>
+                    <div class="body-type-label"><span class="label label-default">XML</span></div>
+                </div>
+            {{/if}}
+
+            {{#if signature}}
+                <div role="tabpanel" class="tab-pane" id="schema_{{id}}_pane">
+                    <div class="description">
+                        {{{signature}}}
+                    </div>
+                </div>
+            {{/if}}
         </div>
     </div>
-{{/if}}
+</div>

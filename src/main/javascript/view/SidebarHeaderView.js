@@ -39,6 +39,8 @@ SwaggerUi.Views.SidebarHeaderView = Backbone.View.extend({
 
   clickSidebarItem: function (e) {
 
+    var self = this;
+
     var elem = $(e.target);
     var eln = $("#" + elem.attr("data-endpoint"));
 
@@ -56,7 +58,7 @@ SwaggerUi.Views.SidebarHeaderView = Backbone.View.extend({
       scrollT(r)
     }
 
-    /set selected value and select operation (class) */
+    /* set selected value and select operation (class) */
     function setSelected(element) {
       {
         var nav = $(".sticky-nav [data-navigator]");
@@ -79,12 +81,52 @@ SwaggerUi.Views.SidebarHeaderView = Backbone.View.extend({
     }
 
     function scrollT(e) {
-      if ("self" === e) {
+      /*if ("self" === e) {
         var n = $(window).scrollTop();
         return $(window).scrollTop(n)
       }
 
-      return $(window).scrollTop(e)
+      return $(window).scrollTop(e)*/
+
+      var scollsession = window.scrollSession = window.scrollSession ? window.scrollSession + 1 : 1;
+
+      if ("self" === e) {
+        e = $(window).scrollTop();
+      }
+
+      var $body = $('body');
+      var bodyScrollTop = $body.scrollTop();
+      var diff = e - bodyScrollTop;
+      var jumpStart = bodyScrollTop;
+      if (diff < 0 && diff < -100) {
+        //scrollUp
+        //jumpStart = e + 100;
+      } else if (diff > 0 && diff > 100) {
+        //scrollDown
+        //jumpStart = e - 100;
+      }
+
+      $body.stop();
+
+      if (diff !== 0) {
+        $body.scrollTop(jumpStart).animate({
+          scrollTop: e,
+        }, {
+          duration: 1000,
+          queue: false,
+          start: function (animationPromise) {
+            console.log(scollsession + ' Scroll Started');
+            $(".sticky-nav [data-navigator]").attr('data-scrolling', 'true');
+          },
+          done: function () {
+            console.log(scollsession + ' Scroll Done');
+          },
+          always: function (animationPromise, jumpToEnd) {
+            console.log(scollsession + ' Scroll Stopped');
+            $(".sticky-nav [data-navigator]").removeAttr('data-scrolling');
+          }
+        });
+      }
     }
   }
 

@@ -6,18 +6,28 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
   events: {
     'submit .sandbox': 'submitOperation',
     'click .submit': 'submitOperation',
-    'click  a.toggle-samples': 'toggleSamples'
+    'click  a.toggle-samples': 'toggleSamples',
 //    'mouseenter .api-ic': 'mouseEnter',
-//    'mouseout .api-ic': 'mouseExit'
+//    'mouseout .api-ic': 'mouseExit',
+    'change [name=responseContentType]' : 'showSnippet'
   },
 
   initialize: function (opts) {
+    console.log('OperationView::initialize');
     opts = opts || {};
     this.router = opts.router;
     this.auths = opts.auths;
     this.parentId = this.model.parentId;
     this.nickname = this.model.nickname;
     this.model.encodedParentId = encodeURIComponent(this.parentId);
+
+    if (opts.swaggerOptions) {
+      this.model.defaultRendering = opts.swaggerOptions.defaultModelRendering;
+
+      if (opts.swaggerOptions.showRequestHeaders) {
+        this.model.showRequestHeaders = true;
+      }
+    }
     return this;
   },
 
@@ -52,17 +62,12 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
     pos.top = y;
     pos.left = x;
     elem.css(pos);
-    $(e.currentTarget.parentNode).find('#api_information_panel').show();
-  },
-
-  mouseExit: function (e) {
-    $(e.currentTarget.parentNode).find('#api_information_panel').hide();
   },
 
   // Note: copied from CoffeeScript compiled file
   // TODO: redactor
   render: function () {
-    var a, auth, auths, code, contentTypeModel, isMethodSubmissionSupported, k, key, l, len, len1, len2, len3, len4, m, modelAuths, n, o, p, param, q, ref, ref1, ref2, ref3, ref4, ref5, responseContentTypeView, responseSignatureView, schema, schemaObj, scopeIndex, signatureModel, statusCode, successResponse, type, v, value;
+    var a, auth, auths, code, contentTypeModel, isMethodSubmissionSupported, k, key, l, len, len1, len2, len3, len4, m, modelAuths, n, o, p, param, q, ref, ref1, ref2, ref3, ref4, ref5, responseContentTypeView, responseSignatureView, schema, schemaObj, scopeIndex, signatureModel, statusCode, successResponse, type, v, value, produces, isXML, isJSON;
     isMethodSubmissionSupported = jQuery.inArray(this.model.method, this.model.supportedSubmitMethods()) >= 0;
     if (!isMethodSubmissionSupported) {
       this.model.isReadOnly = true;
@@ -77,22 +82,23 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
         for (l = 0, len = modelAuths.length; l < len; l++) {
           auths = modelAuths[l];
           for (key in auths) {
-            auth = auths[key];
             for (a in this.auths) {
               auth = this.auths[a];
-              if (auth.type === 'oauth2') {
-                this.model.oauth = {};
-                this.model.oauth.scopes = [];
-                ref1 = auth.value.scopes;
-                for (k in ref1) {
-                  v = ref1[k];
-                  scopeIndex = auths[key].indexOf(k);
-                  if (scopeIndex >= 0) {
-                    o = {
-                      scope: k,
-                      description: v
-                    };
-                    this.model.oauth.scopes.push(o);
+              if (key === auth.name) {
+                if (auth.type === 'oauth2') {
+                  this.model.oauth = {};
+                  this.model.oauth.scopes = [];
+                  ref1 = auth.value.scopes;
+                  for (k in ref1) {
+                    v = ref1[k];
+                    scopeIndex = auths[key].indexOf(k);
+                    if (scopeIndex >= 0) {
+                      o = {
+                        scope: k,
+                        description: v
+                      };
+                      this.model.oauth.scopes.push(o);
+                    }
                   }
                 }
               }
@@ -127,14 +133,16 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
         schemaObj = this.model.responses[code].schema;
         if (schemaObj && schemaObj.$ref) {
           schema = schemaObj.$ref;
-          if (schema.indexOf('#/definitions/') === 0) {
-            schema = schema.substring('#/definitions/'.length);
+          if (schema.indexOf('#/definitions/') !== -1) {
+            schema = schema.replace(/^.*#\/definitions\//, '');
           }
         }
         this.model.responseMessages.push({
           code: code,
           message: value.description,
-          responseModel: schema
+          responseModel: schema,
+          headers: value.headers,
+          schema: schemaObj
         });
       }
     }
@@ -142,16 +150,23 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
       this.model.responseMessages = [];
     }
     signatureModel = null;
+    produces = this.model.produces;
+    isXML = this.contains(produces, 'xml');
+    isJSON = isXML ? this.contains(produces, 'json') : true;
+
     if (this.model.successResponse) {
       successResponse = this.model.successResponse;
       for (key in successResponse) {
         value = successResponse[key];
         this.model.successCode = key;
         if (typeof value === 'object' && typeof value.createJSONSample === 'function') {
+          this.model.successDescription = value.description;
+          this.model.headers = this.parseResponseHeaders(value.headers);
           signatureModel = {
-            sampleJSON: JSON.stringify(value.createJSONSample(), void 0, 2),
+            sampleJSON: isJSON ? JSON.stringify(SwaggerUi.partials.signature.createJSONSample(value), void 0, 2) : false,
             isParam: false,
-            signature: value.getMockSignature(),
+            sampleXML: isXML ? SwaggerUi.partials.signature.createXMLSample(value.definition, value.models) : false,
+            signature: SwaggerUi.partials.signature.getModelSignature(value.name, value.definition, value.models, value.modelPropertyMacro),
             type: "Response",
             id: this.parentId + '_' + this.nickname + '_succes'
           };
@@ -168,6 +183,7 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
     }
     $(this.el).html(Handlebars.templates.operation(this.model));
     if (signatureModel) {
+      signatureModel.defaultRendering = this.model.defaultRendering;
       responseSignatureView = new SwaggerUi.Views.SignatureView({
         model: signatureModel,
         router: this.router,
@@ -175,10 +191,10 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
         type: "Response",
         id: this.parentId + '_' + this.nickname + '_response'
       });
-      $('.model-signature', $(this.el)).append(responseSignatureView.render().el);
+      $('.model-signature > .response-signature', $(this.el)).append(responseSignatureView.render().el);
     } else {
       this.model.responseClassSignature = 'string';
-      $('.model-signature', $(this.el)).html(this.model.type);
+      $('.model-signature > .response-signature', $(this.el)).html(this.model.type);
     }
 
     contentTypeModel = {
@@ -219,50 +235,109 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
     for (p = 0, len3 = ref4.length; p < len3; p++) {
       param = ref4[p];
       this.addParameter(param, contentTypeModel.consumes);
-      if (param.paramType === 'body' || param.in === 'body') {
-        this.addBodyModel(param)
-      }
     }
 
 
     ref5 = this.model.responseMessages;
     for (q = 0, len4 = ref5.length; q < len4; q++) {
       statusCode = ref5[q];
+      statusCode.isXML = isXML;
+      statusCode.isJSON = isJSON;
+      if (!_.isUndefined(statusCode.headers)) {
+        statusCode.headers = this.parseHeadersType(statusCode.headers);
+      }
       this.addStatusCode(statusCode);
     }
+
+    this.showSnippet();
 
     return this;
   },
 
-  addBodyModel: function (param) {
-    if (param.type === 'file') return;
-
-    var bodySample = {
-      sampleJSON: param.sampleJSON,
-      isParam: true,
-      signature: param.signature,
-      type: "Body",
-      id: this.parentId + '_' + this.nickname + '_body'
+  parseHeadersType: function (headers) {
+    var map = {
+      'string': {
+        'date-time': 'dateTime',
+        'date'     : 'date'
+      }
     };
-    var signatureView = new SwaggerUi.Views.SignatureView({model: bodySample, tagName: 'div'});
-    $('.model-signature', $(this.el)).append(signatureView.render().el);
+
+    _.forEach(headers, function (header) {
+      var value;
+      header = header || {};
+      value = map[header.type] && map[header.type][header.format];
+      if (!_.isUndefined(value)) {
+        header.type = value;
+      }
+    });
+
+    return headers;
   },
 
+  contains: function (produces, type) {
+    return produces.filter(function (val) {
+      if (val.indexOf(type) > -1) {
+        return true;
+      }
+    }).length;
+  },
 
-  addParameter: function (param, consumes) {
+  parseResponseHeaders: function (data) {
+    var HEADERS_SEPARATOR = '; ';
+    var headers = _.clone(data);
+
+    _.forEach(headers, function (header) {
+      var other = [];
+      _.forEach(header, function (value, key) {
+        var properties = ['type', 'description'];
+        if (properties.indexOf(key.toLowerCase()) === -1) {
+          other.push(key + ': ' + value);
+        }
+      });
+
+      other.join(HEADERS_SEPARATOR);
+      header.other = other;
+    });
+
+    return headers;
+  },
+
+  addParameter: function(param, consumes) {
     // Render a parameter
     param.consumes = consumes;
+    param.defaultRendering = this.model.defaultRendering;
+
+    // Copy this param JSON spec so that it will be available for JsonEditor
+    if(param.schema){
+      $.extend(true, param.schema, this.model.definitions[param.type]);
+      param.schema.definitions = this.model.definitions;
+      // This is required for JsonEditor to display the root properly
+      if(!param.schema.type){
+        param.schema.type = 'object';
+      }
+      // This is the title that will be used by JsonEditor for the root
+      // Since we already display the parameter's name in the Parameter column
+      // We set this to space, we can't set it to null or space otherwise JsonEditor
+      // will replace it with the text "root" which won't look good on screen
+      if(!param.schema.title){
+        param.schema.title = ' ';
+      }
+    }
+
     var paramView = new SwaggerUi.Views.ParameterView({
       model: param,
       tagName: 'div',
       className: 'parameter-item',
-      readOnly: this.model.isReadOnly
+      readOnly: this.model.isReadOnly,
+      swaggerOptions: this.options.swaggerOptions,
+      parentView: this
     });
     $('.operation-params', $(this.el)).append(paramView.render().el);
   },
 
   addStatusCode: function (statusCode) {
     // Render status codes
+    statusCode.defaultRendering = this.model.defaultRendering;
     var statusCodeView = new SwaggerUi.Views.StatusCodeView({
       model: statusCode,
       tagName: 'tr',
@@ -274,7 +349,7 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
   // Note: copied from CoffeeScript compiled file
   // TODO: redactor
   submitOperation: function (e) {
-    var error_free, form, isFileUpload, l, len, len1, len2, m, map, n, o, opts, ref1, ref2, ref3, val;
+    var error_free, form, isFileUpload, map, opts;
     if (e !== null) {
       e.preventDefault();
     }
@@ -308,135 +383,119 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
         error_free = false;
       }
     });
+    form.find('select.required').each(function() {
+      $(this).removeClass('error');
+      if (this.selectedIndex === -1) {
+        $(this).addClass('error');
+        $(this).wiggle({
+          callback: (function(_this) {
+            return function() {
+              $(_this).focus();
+            };
+          })(this)
+        });
+        error_free = false;
+      }
+    });
     if (error_free) {
-      map = {};
+      map = this.getInputMap(form);
+      isFileUpload = this.isFileUpload(form);
       opts = {
         parent: this
       };
-      isFileUpload = false;
-      ref1 = form.find('input');
-      for (l = 0, len = ref1.length; l < len; l++) {
-        o = ref1[l];
-        if ((o.value !== null) && jQuery.trim(o.value).length > 0) {
-          map[o.name] = o.value;
-        }
-        if (o.type === 'file') {
-          map[o.name] = o.files[0];
-          isFileUpload = true;
+      if (this.options.swaggerOptions) {
+        for(var key in this.options.swaggerOptions) {
+          opts[key] = this.options.swaggerOptions[key];
         }
       }
-      ref2 = form.find('textarea');
-      for (m = 0, len1 = ref2.length; m < len1; m++) {
-        o = ref2[m];
-        if ((o.value !== null) && jQuery.trim(o.value).length > 0) {
-          map[o.name] = o.value;
+
+      var pi;
+      for(pi = 0; pi < this.model.parameters.length; pi++){
+        var p = this.model.parameters[pi];
+        if( p.jsonEditor && p.jsonEditor.isEnabled()){
+          var json = p.jsonEditor.getValue();
+          map[p.name] = JSON.stringify(json);
         }
       }
-      ref3 = form.find('select');
-      for (n = 0, len2 = ref3.length; n < len2; n++) {
-        o = ref3[n];
-        val = this.getSelectedValue(o);
-        if ((val !== null) && jQuery.trim(val).length > 0) {
-          map[o.name] = val;
-        }
-      }
+
       opts.responseContentType = $('div select[name=responseContentType]', $(this.el)).val();
       opts.requestContentType = $('div select[name=parameterContentType]', $(this.el)).val();
       $(".submit", $(this.el)).button("loading");
       if (isFileUpload) {
-        return this.handleFileUpload(map, form);
+        $('.request_url', $(this.el)).html('<pre></pre>');
+        $('.request_url pre', $(this.el)).text(this.invocationUrl);
+
+        opts.useJQuery = true;
+        map.parameterContentType = 'multipart/form-data';
+        this.map = map;
+        return this.model.execute(map, opts, this.showCompleteStatus, this.showErrorStatus, this);
       } else {
-        return this.model['do'](map, opts, this.showCompleteStatus, this.showErrorStatus, this);
+        this.map = map;
+        return this.model.execute(map, opts, this.showCompleteStatus, this.showErrorStatus, this);
       }
     }
   },
 
-  success: function (response, parent) {
-    parent.showCompleteStatus(response);
-  },
-
-  // Note: This is compiled code
-  // TODO: Refactor
-  handleFileUpload: function (map, form) {
-    var bodyParam, el, headerParams, l, len, len1, len2, len3, m, n, o, p, param, params, ref1, ref2, ref3, ref4;
-    ref1 = form.serializeArray();
+  getInputMap: function (form) {
+    var map, ref1, l, len, o, ref2, m, len1, val, ref3, n, len2;
+    map = {};
+    ref1 = form.find('input');
     for (l = 0, len = ref1.length; l < len; l++) {
       o = ref1[l];
       if ((o.value !== null) && jQuery.trim(o.value).length > 0) {
         map[o.name] = o.value;
       }
+      if (o.type === 'file') {
+        map[o.name] = o.files[0];
+      }
     }
-    bodyParam = new FormData();
-    params = 0;
-    ref2 = this.model.parameters;
+    ref2 = form.find('textarea');
     for (m = 0, len1 = ref2.length; m < len1; m++) {
-      param = ref2[m];
-      if (param.paramType === 'form' || param['in'] === 'formData') {
-        if (param.type.toLowerCase() !== 'file' && map[param.name] !== void 0) {
-          bodyParam.append(param.name, map[param.name]);
-        }
+      o = ref2[m];
+      val = this.getTextAreaValue(o);
+      if ((val !== null) && jQuery.trim(val).length > 0) {
+        map[o.name] = val;
       }
     }
-    headerParams = {};
-    ref3 = this.model.parameters;
+    ref3 = form.find('select');
     for (n = 0, len2 = ref3.length; n < len2; n++) {
-      param = ref3[n];
-      if (param.paramType === 'header') {
-        headerParams[param.name] = map[param.name];
+      o = ref3[n];
+      val = this.getSelectedValue(o);
+      if ((val !== null) && jQuery.trim(val).length > 0) {
+        map[o.name] = val;
       }
     }
-    ref4 = form.find('input[type~="file"]');
-    for (p = 0, len3 = ref4.length; p < len3; p++) {
-      el = ref4[p];
-      if (typeof el.files[0] !== 'undefined') {
-        bodyParam.append($(el).attr('name'), el.files[0]);
-        params += 1;
+    return map;
+  },
+
+  isFileUpload: function (form) {
+    var ref1, l, len, o;
+    var isFileUpload = false;
+    ref1 = form.find('input');
+    for (l = 0, len = ref1.length; l < len; l++) {
+      o = ref1[l];
+      if (o.type === 'file') {
+        isFileUpload = true;
       }
     }
-    this.invocationUrl = this.model.supportHeaderParams() ? (headerParams = this.model.getHeaderParams(map), delete headerParams['Content-Type'], this.model.urlify(map, false)) : this.model.urlify(map, true);
-    $('.request_url', $(this.el)).html('<pre></pre>');
-    $('.request_url pre', $(this.el)).text(this.invocationUrl);
-    
-    var clientAuths = window.swaggerUi.api.clientAuthorizations;
+    return isFileUpload;
+  },
+
+  //TODO: BINTAL COMMENTED OUT - NEED TO MOVE TO CORRECT PLACE
+    /*var clientAuths = window.swaggerUi.api.clientAuthorizations;
     if (typeof clientAuths !== 'undefined' && typeof(clientAuths.authz) !== 'undefined') {
       _.forEach(clientAuths.authz, function(auth, key) {
         if (auth.type == 'header') {
           headerParams[auth.name] = auth.value;
         }
       });
-    }
+    }*/
 
-    // TODO: don't use jQuery. Use SwaggerJS for handling the call.
-    var obj = {
-      type: this.model.method,
-      url: this.invocationUrl,
-      headers: headerParams,
-      data: bodyParam,
-      dataType: 'json',
-      contentType: false,
-      processData: false,
-      error: (function (_this) {
-        return function (data) {
-          return _this.showErrorStatus(_this.wrap(data), _this);
-        };
-      })(this),
-      success: (function (_this) {
-        return function (data) {
-          return _this.showResponse(data, _this);
-        };
-      })(this),
-      complete: (function (_this) {
-        return function (data) {
-          return _this.showCompleteStatus(_this.wrap(data), _this);
-        };
-      })(this)
-    };
-    jQuery.ajax(obj);
-    return false;
-    // end of file-upload nastiness
+  success: function(response, parent) {
+    parent.showCompleteStatus(response);
   },
-  // wraps a jquery response as a shred response
 
+  // wraps a jquery response as a shred response
   wrap: function (data) {
     var h, headerArray, headers, i, l, len, o;
     headers = {};
@@ -507,7 +566,7 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
     reg = /(>)(<)(\/*)/g;
     wsexp = /[ ]*(.*)[ ]+\n/g;
     contexp = /(<.+>)(.+\n)/g;
-    xml = xml.replace(reg, '$1\n$2$3').replace(wsexp, '$1\n').replace(contexp, '$1\n$2');
+    xml = xml.replace(/\r\n/g, '\n').replace(reg, '$1\n$2$3').replace(wsexp, '$1\n').replace(contexp, '$1\n$2');
     pad = 0;
     formatted = '';
     lines = xml.split('\n');
@@ -586,6 +645,7 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
       url = response.request.url;
     }
     var headers = response.headers;
+    content = jQuery.trim(content);
 
     // if server is nice, and sends content-type back, we can use it
     var contentType = null;
@@ -645,10 +705,10 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
       pre = $('<audio controls>').append($('<source>').attr('src', url).attr('type', contentType));
 
       // Download
-    } else if (headers['Content-Disposition'].test(/attachment/) ||
-      headers['content-disposition'].test(/attachment/) ||
-      headers['Content-Description'].test(/File Transfer/) ||
-      headers['content-description'].test(/File Transfer/)) {
+    } else if (headers['Content-Disposition'] && (/attachment/).test(headers['Content-Disposition']) ||
+               headers['content-disposition'] && (/attachment/).test(headers['content-disposition']) ||
+               headers['Content-Description'] && (/File Transfer/).test(headers['Content-Description']) ||
+               headers['content-description'] && (/File Transfer/).test(headers['content-description'])) {
 
       if ('Blob' in window) {
         var type = contentType || 'text/html';
@@ -686,40 +746,97 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
     $('.response', $(this.el)).slideDown();
     $('.response_hider', $(this.el)).show();
     $('.response_throbber', $(this.el)).hide();
-    var response_body_el = $('.response_body', $(this.el))[0];
+
 
     $(".submit", $(this.el)).button("reset");
+    // adds curl output
+    var curlCommand = this.model.asCurl(this.map, {responseContentType: contentType});
+    curlCommand = curlCommand.replace('!', '&#33;');
+    $( 'div.curl', $(this.el)).html('<pre>' + _.escape(curlCommand) + '</pre>');
 
     // only highlight the response if response is less than threshold, default state is highlight response
     var opts = this.options.swaggerOptions;
-    if (opts.highlightSizeThreshold && response.data.length > opts.highlightSizeThreshold) {
+
+    if (opts.showRequestHeaders) {
+      var form = $('.sandbox', $(this.el)),
+        map = this.getInputMap(form),
+        requestHeaders = this.model.getHeaderParams(map);
+      delete requestHeaders['Content-Type'];
+      $('.request_headers', $(this.el)).html('<pre>' + _.escape(JSON.stringify(requestHeaders, null, '  ')).replace(/\n/g, '<br>') + '</pre>');
+    }
+
+    var response_body_el = $('.response_body', $(this.el))[0];
+    // only highlight the response if response is less than threshold, default state is highlight response
+    if (opts.highlightSizeThreshold && typeof response.data !== 'undefined' && response.data.length > opts.highlightSizeThreshold) {
       return response_body_el;
     } else {
       return hljs.highlightBlock(response_body_el);
     }
   },
 
-  toggleSamples: function (e) {
-    function o(t) {
-      if ("self" === t) {
-        var n = $(window).scrollTop();
-        return $(window).scrollTop(n)
-      }
-      return $(window).scrollTop(t)
+  toggleOperationContent: function (event) {
+    var elem = $('#' + Docs.escapeResourceName(this.parentId + '_' + this.nickname + '_content'));
+    if (elem.is(':visible')){
+      $.bbq.pushState('#/', 2);
+      event.preventDefault();
+      Docs.collapseOperation(elem);
+    } else {
+      Docs.expandOperation(elem);
     }
+  },
 
-    var r = $("#resources"),
-      n = $(e.currentTarget);
+  getTextAreaValue: function(textArea) {
+    var param, parsed, result, i;
+    if (textArea.value === null || jQuery.trim(textArea.value).length === 0) {
+      return null;
+    }
+    param = this.getParamByName(textArea.name);
+    if (param && param.type && param.type.toLowerCase() === 'array') {
+      parsed = textArea.value.split('\n');
+      result = [];
+      for (i = 0; i < parsed.length; i++) {
+        if (parsed[i] !== null && jQuery.trim(parsed[i]).length > 0) {
+          result.push(parsed[i]);
+        }
+      }
+      return result.length > 0 ? result : null;
+    } else {
+      return textArea.value;
+    }
+  },
 
-    r.toggleClass("samples-collapsed").addClass("is-collapsing");
-    n.find('.text').text("Collapse samples");
-    r.hasClass("samples-collapsed") && n.find('.text').text("Show samples");
+  showSnippet: function () {
+    var contentTypeEl = this.$('[name=responseContentType]');
+    var xmlSnippetEl = this.$('.operation-status .snippet_xml, .response-class .snippet_xml');
+    var jsonSnippetEl = this.$('.operation-status .snippet_json, .response-class .snippet_json');
+    var xmlSnippetTab = this.$('.model-signature > .response-signature .nav li.xml-tab > a');
+    var jsonSnippetTab = this.$('.model-signature > .response-signature .nav li.json-tab > a');
+    var contentType;
 
-    setTimeout(function () {
-      var t = n.parents(".endpoint").first().offset().top;
-      r.removeClass("is-collapsing");
-      o(t)
-    }, 500)
+    if (!contentTypeEl.length) { return; }
+    contentType = contentTypeEl.val();
+
+    if (contentType.indexOf('xml') > -1) {
+      xmlSnippetEl.show();
+      jsonSnippetEl.hide();
+      xmlSnippetTab.tab('show');
+    } else {
+      jsonSnippetEl.show();
+      xmlSnippetEl.hide();
+      jsonSnippetTab.tab('show');
+    }
+  },
+
+  getParamByName: function(name) {
+    var i;
+    if (this.model.parameters) {
+      for(i = 0; i < this.model.parameters.length; i++) {
+        if (this.model.parameters[i].name === name) {
+          return this.model.parameters[i];
+        }
+      }
+    }
+    return null;
   }
 
 });
