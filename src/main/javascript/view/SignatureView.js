@@ -52,10 +52,7 @@ SwaggerUi.Views.SignatureView = Backbone.View.extend({
         e.preventDefault();
       }
 
-      var textArea = $('textarea', $(this.el.parentNode.parentNode.parentNode));
-      if ($.trim(textArea.val()) === '') {
-        textArea.val(this.model.sampleJSON);
-      }
+      this.$el.trigger('snippet', this.model.sampleJSON);
     }
   }
 });

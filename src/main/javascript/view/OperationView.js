@@ -6,7 +6,8 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
   events: {
     'submit .sandbox': 'submitOperation',
     'click .submit': 'submitOperation',
-    'click  a.toggle-samples': 'toggleSamples'
+    'click  a.toggle-samples': 'toggleSamples',
+    'snippet': 'snippetToCodeMirror'
 //    'mouseenter .api-ic': 'mouseEnter',
 //    'mouseout .api-ic': 'mouseExit'
   },
@@ -308,6 +309,15 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
 
     var signatureView = new SwaggerUi.Views.SignatureView({model: bodySample, tagName: 'div'});
     $('.model-signature', $(this.el)).append(signatureView.render().el);
+
+    var $editor = this.$el.find('textarea.body-textarea');
+    this.codeMirror = CodeMirror.fromTextArea($editor[0], {lineWrapping: true});
+  },
+
+  snippetToCodeMirror: function (e, snippet) {
+    if (this.codeMirror) {
+      this.codeMirror.setValue(snippet || '');
+    }
   },
 
 
@@ -341,6 +351,9 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
       e.preventDefault();
     }
     form = $('.sandbox', $(this.el));
+    if (this.codeMirror) {
+      this.codeMirror.save();
+    }
     error_free = true;
     form.find('input.required').each(function () {
       $(this).removeClass('error');
