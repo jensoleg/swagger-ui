@@ -311,7 +311,7 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
     $('.model-signature', $(this.el)).append(signatureView.render().el);
 
     var $editor = this.$el.find('textarea.body-textarea');
-    this.codeMirror = CodeMirror.fromTextArea($editor[0], {lineWrapping: true});
+    this.codeMirror = CodeMirror.fromTextArea($editor[0], {json: true});
   },
 
   snippetToCodeMirror: function (e, snippet) {
