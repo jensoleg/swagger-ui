@@ -21766,7 +21766,7 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
     }
     form = $('.sandbox', $(this.el));
     error_free = true;
-    form.find('input.required::visible').each(function () {
+    form.find('input.required:visible').each(function () {
       $(this).removeClass('error');
       if (jQuery.trim($(this).val()) === '') {
         $(this).addClass('error');
