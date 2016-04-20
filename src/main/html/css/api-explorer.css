@@ -205,7 +205,7 @@
     background: #ff9a57
 }
 
-.swagger-section .form-control.error {
+.swagger-section .ui-form-control.error {
     border-color: #fd8888;
     border-width: 2px
 }
@@ -346,17 +346,17 @@
     }
 }
 
-.swagger-section .parameter-item .form-control {
+.swagger-section .parameter-item .ui-form-control {
     width: auto;
     max-width: 100%
 }
 
-.swagger-section .parameter-item .form-control.body-textarea {
+.swagger-section .parameter-item .ui-form-control.body-textarea {
     min-height: 100px;
     width: 100%
 }
 
-.swagger-section .parameter-item select.form-control {
+.swagger-section .parameter-item select.ui-form-control {
     width: auto
 }
 

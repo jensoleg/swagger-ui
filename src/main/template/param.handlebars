@@ -9,10 +9,10 @@
             {{#if default}}
                 <div class="editor_holder"></div>
 
-                <textarea class='body-textarea form-control' name='{{name}}' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{name}}'>{{default}}</textarea>
+                <textarea class='body-textarea ui-form-control' name='{{name}}' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{name}}'>{{default}}</textarea>
                 <div class="parameter-content-type"/>
             {{else}}
-                <textarea class='body-textarea form-control' name='{{name}}' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{name}}'></textarea>
+                <textarea class='body-textarea ui-form-control' name='{{name}}' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{name}}'></textarea>
                 <div class="editor_holder"></div>
                 <div class="parameter-content-type"/>
             {{/if}}
@@ -33,9 +33,9 @@
             <div class="parameter-content-type"/>
         {{else}}
             {{#if default}}
-                <input class='parameter form-control' minlength='0' name='{{name}}' placeholder='' type='{{inputType}}' value='{{default}}'  data-toggle="tooltip" data-placement="right" title="" data-original-title='{{name}}'/>
+                <input class='parameter ui-form-control' minlength='0' name='{{name}}' placeholder='' type='{{inputType}}' value='{{default}}'  data-toggle="tooltip" data-placement="right" title="" data-original-title='{{name}}'/>
             {{else}}
-                <input class='parameter form-control' minlength='0' name='{{name}}' placeholder='' type='{{inputType}}' value=''  data-toggle="tooltip" data-placement="right" title="" data-original-title='{{name}}'/>
+                <input class='parameter ui-form-control' minlength='0' name='{{name}}' placeholder='' type='{{inputType}}' value=''  data-toggle="tooltip" data-placement="right" title="" data-original-title='{{name}}'/>
             {{/if}}
         {{/if}}
         <div class="small-description">
