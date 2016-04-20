@@ -45,7 +45,46 @@ SwaggerUi.Views.ParameterView = Backbone.View.extend({
     var template = this.template();
     $(this.el).html(template(this.model));
 
+    var signatureModel = {
+      sampleJSON: this.model.sampleJSON,
+      isParam: true,
+      signature: this.model.signature,
+      defaultRendering: this.model.defaultRendering
+    };
+
     var isParam = false;
+
+    if( this.options.swaggerOptions.jsonEditor && this.model.isBody && this.model.schema){
+      var $self = $(this.el);
+      this.model.schema.defaultProperties = [];
+      this.model.jsonEditor =
+        /* global JSONEditor */
+          new JSONEditor($('.editor_holder', $self)[0],
+              {schema: this.model.schema, startval : this.model.default,
+                ajax:true,
+                disable_properties:false,
+                disable_edit_json:false,
+                remove_empty_properties:true,
+                iconlib: 'swagger' });
+      // This is so that the signature can send back the sample to the json editor
+      // TODO: SignatureView should expose an event "onSampleClicked" instead
+      signatureModel.jsonEditor = this.model.jsonEditor;
+      $('.body-textarea', $self).hide();
+      $('.editor_holder', $self).show();
+      $('.parameter-content-type', $self)
+        .change(function(e){
+          if(e.target.value === 'application/xml'){
+            $('.body-textarea', $self).show();
+            $('.editor_holder', $self).hide();
+            this.model.jsonEditor.disable();
+          }
+          else {
+            $('.body-textarea', $self).hide();
+            $('.editor_holder', $self).show();
+            this.model.jsonEditor.enable();
+          }
+        });
+    }
 
     if (this.model.isBody) {
       isParam = true;

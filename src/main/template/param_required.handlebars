@@ -5,10 +5,13 @@
             <input type="file" name='{{name}}'/>
         {{else}}
             {{#if default}}
+                <div class="editor_holder"></div>
                 <textarea class='body-textarea form-control required' placeholder='(required)' name='{{name}}'  data-toggle="tooltip" data-placement="top" title="" data-original-title='{{name}}'>{{default}}</textarea>
                 <div class="parameter-content-type"/>
             {{else}}
                 <textarea class='body-textarea form-control required' placeholder='(required)' name='{{name}}' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{name}}'></textarea>
+                <div class="editor_holder"></div>
+                <br/>
                 <div class="parameter-content-type"/>
             {{/if}}
         {{/if}}

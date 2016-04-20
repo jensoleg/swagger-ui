@@ -86,6 +86,14 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
         this.model.validatorUrl = window.location.protocol + '//online.swagger.io/validator';
       }
     }
+    // JSonEditor requires type='object' to be present on defined types, we add it if it's missing
+    // is there any valid case were it should not be added ?
+    var def;
+    for(def in this.model.definitions){
+      if (!this.model.definitions[def].type){
+        this.model.definitions[def].type = 'object';
+      }
+    }
   },
 
   render: function () {
@@ -146,6 +154,10 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
   addResource: function (resource, auths) {
     // Render a resource and add it to resources li
     resource.id = resource.id.replace(/\s/g, '_');
+
+    // Make all definitions available at the root of the resource so that they can
+    // be loaded by the JSonEditor
+    resource.definitions = this.model.definitions;
     var resourceView = new SwaggerUi.Views.ResourceView({
       model: resource,
       router: this.router,

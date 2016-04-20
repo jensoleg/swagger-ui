@@ -1,5 +1,5 @@
 /**
- * swagger-ui - Swagger UI is a dependency-free collection of HTML, JavaScript, and CSS assets that dynamically generate beautiful documentation from a Swagger-compliant API
+ * swagger-ui-jensoleg - Swagger UI is a dependency-free collection of HTML, JavaScript, and CSS assets that dynamically generate beautiful documentation from a Swagger-compliant API
  * @version v2.1.1-M2
  * @link http://swagger.io
  * @license Apache 2.0
@@ -463,7 +463,7 @@ this["Handlebars"]["templates"]["param_required"] = Handlebars.template({"1":fun
   return buffer;
 },"5":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "                <textarea class='body-textarea form-control required' placeholder='(required)' name='"
+  return "                <div class=\"editor_holder\"></div>\n                <textarea class='body-textarea form-control required' placeholder='(required)' name='"
     + escapeExpression(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"name","hash":{},"data":data}) : helper)))
     + "'  data-toggle=\"tooltip\" data-placement=\"top\" title=\"\" data-original-title='"
     + escapeExpression(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"name","hash":{},"data":data}) : helper)))
@@ -476,7 +476,7 @@ this["Handlebars"]["templates"]["param_required"] = Handlebars.template({"1":fun
     + escapeExpression(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"name","hash":{},"data":data}) : helper)))
     + "' data-toggle=\"tooltip\" data-placement=\"top\" title=\"\" data-original-title='"
     + escapeExpression(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"name","hash":{},"data":data}) : helper)))
-    + "'></textarea>\n                <div class=\"parameter-content-type\"/>\n";
+    + "'></textarea>\n                <div class=\"editor_holder\"></div>\n                <br/>\n                <div class=\"parameter-content-type\"/>\n";
 },"9":function(depth0,helpers,partials,data) {
   var stack1, buffer = "";
   stack1 = helpers['if'].call(depth0, (depth0 != null ? depth0.isFile : depth0), {"name":"if","hash":{},"fn":this.program(10, data),"inverse":this.program(12, data),"data":data});
@@ -554,7 +554,7 @@ this["Handlebars"]["templates"]["param"] = Handlebars.template({"1":function(dep
   return buffer;
 },"5":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "                <textarea class='body-textarea form-control' name='"
+  return "                <div class=\"editor_holder\"></div>\n\n                <textarea class='body-textarea form-control' name='"
     + escapeExpression(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"name","hash":{},"data":data}) : helper)))
     + "' data-toggle=\"tooltip\" data-placement=\"top\" title=\"\" data-original-title='"
     + escapeExpression(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"name","hash":{},"data":data}) : helper)))
@@ -567,7 +567,7 @@ this["Handlebars"]["templates"]["param"] = Handlebars.template({"1":function(dep
     + escapeExpression(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"name","hash":{},"data":data}) : helper)))
     + "' data-toggle=\"tooltip\" data-placement=\"top\" title=\"\" data-original-title='"
     + escapeExpression(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"name","hash":{},"data":data}) : helper)))
-    + "'></textarea>\n                <div class=\"parameter-content-type\"/>\n";
+    + "'></textarea>\n                <div class=\"editor_holder\"></div>\n                <div class=\"parameter-content-type\"/>\n";
 },"9":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "                <code class=\"code-signature\">"
@@ -20817,6 +20817,14 @@ window.SwaggerUi = Backbone.Router.extend({
       return that.updateSwaggerUi(data);
     });
     */
+    //JSon Editor custom theming
+    JSONEditor.defaults.iconlibs.swagger = JSONEditor.AbstractIconLib.extend({
+      mapping: {
+        collapse: 'collapse',
+        expand: 'expand'
+      },
+      icon_prefix: 'swagger-'
+    });
   },
 
   // Set an option after initializing
@@ -21283,6 +21291,14 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
         this.model.validatorUrl = window.location.protocol + '//online.swagger.io/validator';
       }
     }
+    // JSonEditor requires type='object' to be present on defined types, we add it if it's missing
+    // is there any valid case were it should not be added ?
+    var def;
+    for(def in this.model.definitions){
+      if (!this.model.definitions[def].type){
+        this.model.definitions[def].type = 'object';
+      }
+    }
   },
 
   render: function () {
@@ -21343,6 +21359,10 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
   addResource: function (resource, auths) {
     // Render a resource and add it to resources li
     resource.id = resource.id.replace(/\s/g, '_');
+
+    // Make all definitions available at the root of the resource so that they can
+    // be loaded by the JSonEditor
+    resource.definitions = this.model.definitions;
     var resourceView = new SwaggerUi.Views.ResourceView({
       model: resource,
       router: this.router,
@@ -21701,12 +21721,29 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
   addParameter: function (param, consumes) {
     // Render a parameter
     param.consumes = consumes;
+    // Copy this param JSON spec so that it will be available for JsonEditor
+    if(param.schema){
+      $.extend(true, param.schema, this.model.definitions[param.type]);
+      param.schema.definitions = this.model.definitions;
+      // This is required for JsonEditor to display the root properly
+      if(!param.schema.type){
+        param.schema.type = 'object';
+      }
+      // This is the title that will be used by JsonEditor for the root
+      // Since we already display the parameter's name in the Parameter column
+      // We set this to space, we can't set it to null or space otherwise JsonEditor
+      // will replace it with the text "root" which won't look good on screen
+      if(!param.schema.title){
+        param.schema.title = ' ';
+      }
+    }
     var paramView = new SwaggerUi.Views.ParameterView({
       model: param,
       tagName: 'div',
       className: 'parameter-item',
-      readOnly: this.model.isReadOnly
-    });
+      readOnly: this.model.isReadOnly,
+      swaggerOptions: this.options.swaggerOptions
+  });
     $('.operation-params', $(this.el)).append(paramView.render().el);
   },
 
@@ -21729,7 +21766,7 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
     }
     form = $('.sandbox', $(this.el));
     error_free = true;
-    form.find('input.required').each(function () {
+    form.find('input.required::visible').each(function () {
       $(this).removeClass('error');
       if (jQuery.trim($(this).val()) === '') {
         $(this).addClass('error');
@@ -21787,6 +21824,14 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
         val = this.getSelectedValue(o);
         if ((val !== null) && jQuery.trim(val).length > 0) {
           map[o.name] = val;
+        }
+      }
+      var pi;
+      for(pi = 0; pi < this.model.parameters.length; pi++){
+        var p = this.model.parameters[pi];
+        if( p.jsonEditor && p.jsonEditor.isEnabled()){
+          var json = p.jsonEditor.getValue();
+          map[p.name] = JSON.stringify(json);
         }
       }
       opts.responseContentType = $('div select[name=responseContentType]', $(this.el)).val();
@@ -22217,7 +22262,6 @@ SwaggerUi.Views.ParameterView = Backbone.View.extend({
 
     this.model.type = type;
     this.model.paramType = this.model.in || this.model.paramType;
-    console.log('paratype: ', this.model)
     this.model.isBody = this.model.paramType === 'body' || this.model.in === 'body';
     this.model.isFile = type && type.toLowerCase() === 'file';
     this.model.default = (this.model.default || this.model.defaultValue);
@@ -22235,7 +22279,46 @@ SwaggerUi.Views.ParameterView = Backbone.View.extend({
     var template = this.template();
     $(this.el).html(template(this.model));
 
+    var signatureModel = {
+      sampleJSON: this.model.sampleJSON,
+      isParam: true,
+      signature: this.model.signature,
+      defaultRendering: this.model.defaultRendering
+    };
+
     var isParam = false;
+
+    if( this.options.swaggerOptions.jsonEditor && this.model.isBody && this.model.schema){
+      var $self = $(this.el);
+      this.model.schema.defaultProperties = [];
+      this.model.jsonEditor =
+        /* global JSONEditor */
+          new JSONEditor($('.editor_holder', $self)[0],
+              {schema: this.model.schema, startval : this.model.default,
+                ajax:true,
+                disable_properties:false,
+                disable_edit_json:false,
+                remove_empty_properties:true,
+                iconlib: 'swagger' });
+      // This is so that the signature can send back the sample to the json editor
+      // TODO: SignatureView should expose an event "onSampleClicked" instead
+      signatureModel.jsonEditor = this.model.jsonEditor;
+      $('.body-textarea', $self).hide();
+      $('.editor_holder', $self).show();
+      $('.parameter-content-type', $self)
+        .change(function(e){
+          if(e.target.value === 'application/xml'){
+            $('.body-textarea', $self).show();
+            $('.editor_holder', $self).hide();
+            this.model.jsonEditor.disable();
+          }
+          else {
+            $('.body-textarea', $self).hide();
+            $('.editor_holder', $self).show();
+            this.model.jsonEditor.enable();
+          }
+        });
+    }
 
     if (this.model.isBody) {
       isParam = true;
@@ -22316,6 +22399,8 @@ SwaggerUi.Views.ResourceView = Backbone.View.extend({
 
       operation.nickname = id;
       operation.parentId = this.model.id;
+      operation.definitions = this.model.definitions; // make Json Schema available for JSonEditor in this operation
+
       this.addOperation(operation);
     }
 
@@ -22495,6 +22580,10 @@ SwaggerUi.Views.SignatureView = Backbone.View.extend({
       var textArea = $('textarea', $(this.el.parentNode.parentNode.parentNode));
       if ($.trim(textArea.val()) === '') {
         textArea.val(this.model.sampleJSON);
+         // TODO move this code outside of the view and expose an event instead
+         if( this.model.jsonEditor && this.model.jsonEditor.isEnabled()){
+            this.model.jsonEditor.setValue(JSON.parse(this.model.sampleJSON));
+         }
       }
     }
   }
