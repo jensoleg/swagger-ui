@@ -1,12 +1,23 @@
 'use strict';
-
+/*
+ * [TODO] defaultProperties is not take in the required properties into consideration, this implementation respects the specs of JSON Editor v0.7.22
+  {
+   {
+     "type": "object",
+     "properties": {
+     "name": {"type": "string"},
+     "age": {"type": "integer"}
+   },
+   defaultProperties": ["name"]
+  }
+ */
 function setDefaultProperties(obj) {
   if (obj instanceof Object) {
-    for (k in obj){
+    for (var k in obj){
       if(obj.hasOwnProperty("type") && obj.type == "object") {
-        obj.defaultProperties = [];
+        obj.defaultProperties = obj.required ? obj.required : [];
       }
-      //recursive call to setDefaultProperties
+      // recursive call to setDefaultProperties
       setDefaultProperties( obj[k] );
     }
   } else {
