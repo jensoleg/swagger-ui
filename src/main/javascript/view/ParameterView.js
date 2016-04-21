@@ -1,5 +1,19 @@
 'use strict';
 
+function setDefaultProperties(obj) {
+  if (obj instanceof Object) {
+    for (k in obj){
+      if(obj.hasOwnProperty("type") && obj.type == "object") {
+        obj.defaultProperties = [];
+      }
+      //recursive call to setDefaultProperties
+      setDefaultProperties( obj[k] );
+    }
+  } else {
+    // not an Object, break the recursion.
+  };
+}
+
 SwaggerUi.Views.ParameterView = Backbone.View.extend({
   initialize: function(){
     Handlebars.registerHelper('isArray', function(param, opts) {
@@ -55,16 +69,17 @@ SwaggerUi.Views.ParameterView = Backbone.View.extend({
     var isParam = false;
 
     if( this.options.swaggerOptions.jsonEditor && this.model.isBody && this.model.schema){
+      var swaggerOpt = this.options.swaggerOptions;
       var $self = $(this.el);
-      this.model.schema.defaultProperties = [];
+      if (swaggerOpt.noDefaultProperties) setDefaultProperties(this.model.schema);
       this.model.jsonEditor =
         /* global JSONEditor */
           new JSONEditor($('.editor_holder', $self)[0],
               {schema: this.model.schema, startval : this.model.default,
                 ajax:true,
-                disable_properties:false,
-                disable_edit_json:false,
-                remove_empty_properties:true,
+                disable_properties:swaggerOpt.disableProperties,
+                disable_edit_json:swaggerOpt.disableEditJson,
+                remove_empty_properties:swaggerOpt.removeEmptyProperties,
                 iconlib: 'swagger' });
       // This is so that the signature can send back the sample to the json editor
       // TODO: SignatureView should expose an event "onSampleClicked" instead
