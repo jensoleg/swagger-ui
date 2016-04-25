@@ -8,7 +8,7 @@ The theme will adapt to screen size and works on tablets and mobile phones.
 
 [![Swagger Theme example](dist/images/Swagger_explorer_min.png)](http://ecs.bobbytech.dk/api)
 
-A JSON editor for the request body.
+A JSON editor for the request body (disabled by default).
 
 ![Swagger JSON editor example](dist/images/json_editor_integration.png)
 
