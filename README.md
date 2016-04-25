@@ -8,6 +8,24 @@ The theme will adapt to screen size and works on tablets and mobile phones.
 
 [![Swagger Theme example](dist/images/Swagger_explorer_min.png)](http://ecs.bobbytech.dk/api)
 
+A JSON editor for the request body.
+
+![Swagger JSON editor example](dist/images/json_editor_integration.png)
+
+JSON editor configuration example:
+
+```javascript
+                jsonEditor: true,
+                jsonEditorOptions: {
+                    disableProperties:false,
+                    disableEditJson:false,
+                    removeEmptyProperties:true,
+                    noDefaultProperties:true
+                },
+                docExpansion: "none",
+                sorter: "alpha",
+```
+
 Give it a [try](http://swaggerui.herokuapp.com/) and enter your own swagger definition.
 
 
