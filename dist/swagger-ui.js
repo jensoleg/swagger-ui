@@ -1,5 +1,5 @@
 /**
- * swagger-ui-jensoleg - Swagger UI is a dependency-free collection of HTML, JavaScript, and CSS assets that dynamically generate beautiful documentation from a Swagger-compliant API
+ * swagger-ui - Swagger UI is a dependency-free collection of HTML, JavaScript, and CSS assets that dynamically generate beautiful documentation from a Swagger-compliant API
  * @version v2.1.1-M2
  * @link http://swagger.io
  * @license Apache 2.0
@@ -21635,7 +21635,23 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
         id: this.parentId + '_' + this.nickname
       };
     }
+
+    contentTypeModel = {
+      isParam: false
+    };
+    contentTypeModel.consumes = this.model.consumes;
+    contentTypeModel.produces = this.model.produces;
+
     $(this.el).html(Handlebars.templates.operation(this.model));
+
+    ref4 = this.model.parameters;
+    for (p = 0, len3 = ref4.length; p < len3; p++) {
+      param = ref4[p];
+      this.addParameter(param, contentTypeModel.consumes);
+      if (param.paramType === 'body' || param.in === 'body') {
+        this.addBodyModel(param)
+      }
+    }
     if (signatureModel) {
       responseSignatureView = new SwaggerUi.Views.SignatureView({
         model: signatureModel,
@@ -21647,14 +21663,9 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
       $('.model-signature', $(this.el)).append(responseSignatureView.render().el);
     } else {
       this.model.responseClassSignature = 'string';
-      $('.model-signature', $(this.el)).html(this.model.type);
+      $('.model-signature', $(this.el)).append(this.model.type);
     }
 
-    contentTypeModel = {
-      isParam: false
-    };
-    contentTypeModel.consumes = this.model.consumes;
-    contentTypeModel.produces = this.model.produces;
     ref3 = this.model.parameters;
     for (n = 0, len2 = ref3.length; n < len2; n++) {
       param = ref3[n];
@@ -21683,16 +21694,6 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
     });
 
     $('.response-content-type', $(this.el)).append(responseContentTypeView.render().el);
-
-    ref4 = this.model.parameters;
-    for (p = 0, len3 = ref4.length; p < len3; p++) {
-      param = ref4[p];
-      this.addParameter(param, contentTypeModel.consumes);
-      if (param.paramType === 'body' || param.in === 'body') {
-        this.addBodyModel(param)
-      }
-    }
-
 
     ref5 = this.model.responseMessages;
     for (q = 0, len4 = ref5.length; q < len4; q++) {
@@ -21890,7 +21891,7 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
     this.invocationUrl = this.model.supportHeaderParams() ? (headerParams = this.model.getHeaderParams(map), delete headerParams['Content-Type'], this.model.urlify(map, false)) : this.model.urlify(map, true);
     $('.request_url', $(this.el)).html('<pre></pre>');
     $('.request_url pre', $(this.el)).text(this.invocationUrl);
-    
+
     var clientAuths = window.swaggerUi.api.clientAuthorizations;
     if (typeof clientAuths !== 'undefined' && typeof(clientAuths.authz) !== 'undefined') {
       _.forEach(clientAuths.authz, function(auth, key) {
