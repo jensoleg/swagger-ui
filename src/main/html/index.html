@@ -1,416 +1,400 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>API Reference (Swagger explorer) | DataConnect API</title>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!--[if lt IE 9]>
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-    <!--style type="text/css"></style-->
-
-    <link href="css/index.css" rel="stylesheet"/>
-    <link href='css/standalone.css' rel='stylesheet'/>
-     <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href='css/api-explorer.css' rel='stylesheet' type='text/css'/>
-    <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
- 
-
-    <script src='lib/jquery-1.8.0.min.js' type='text/javascript'></script>
-    <script src='lib/jquery.slideto.min.js' type='text/javascript'></script>
-    <script src='lib/jquery.wiggle.min.js' type='text/javascript'></script>
-    <script src='lib/jquery.ba-bbq.min.js' type='text/javascript'></script>
-    <script src='lib/handlebars-2.0.0.js' type='text/javascript'></script>
-    <script src='lib/underscore-min.js' type='text/javascript'></script>
-    <script src='lib/backbone-min.js' type='text/javascript'></script>
-    <script src='swagger-ui.js' type='text/javascript'></script>
-    <script src='lib/highlight.7.3.pack.js' type='text/javascript'></script>
-    <script src='lib/marked.js' type='text/javascript'></script>
-    <script src='lib/swagger-oauth.js' type='text/javascript'></script>
-    <script src='lib/bootstrap.min.js' type='text/javascript'></script>
-
-    <script type="text/javascript">
-	 $(document).ready(function () {
-	    	window.location = '#!';
-	 });
-
-        jQuery.browser = jQuery.browser || {};
-        (function () {
-            jQuery.browser.msie = jQuery.browser.msie || false;
-            jQuery.browser.version = jQuery.browser.version || 0;
-            if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
-                jQuery.browser.msie = true;
-                jQuery.browser.version = RegExp.$1;
-            }
-        })();
-    </script>
-
-    <script type="text/javascript">
-        $(function () {
-            var url = window.location.search.match(/url=([^&]+)/);
-            if (url && url.length > 1) {
-                url = decodeURIComponent(url[1]);
-            } else {
-				var loc = window.location.pathname;
-                url = loc + "swagger.json";     
-            }
-
-            window.swaggerUi = new SwaggerUi({
-                url: url,
-                dom_id: "swagger-ui-container",
-                supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
-                onComplete: function (swaggerApi, swaggerUi) {
-                  if(typeof initOAuth == "function") {
-                    initOAuth({
-                      clientId: "1_2hkd3duxwj288ko4kgo8kog04oc0gg08wc4scssogcwgo4ko04",
-                      clientSecret: "5j2000zqa1gc0oocwskg80c8c40084o04o0kck4wosscc488k8",
-                      realm: "SANDBOX",
-                      appName: "gjallarhorn"
-                    });
-                  }
-
-                    $('pre code').each(function (i, e) {
-                        hljs.highlightBlock(e)
-                    });
-
-                    if (swaggerUi.options.url) {
-                        $('#input_baseUrl').val(swaggerUi.options.url);
-                    }
-                    if (swaggerUi.options.apiKey) {
-                        $('#input_apiKey').val(swaggerUi.options.apiKey);
-                    }
-
-                    $("[data-toggle='tooltip']").tooltip();
-
-                    addApiKeyAuthorization();
-                },
-                onFailure: function (data) {
-                    log("Unable to Load SwaggerUI");
-                },
-                docExpansion: "none",
-                sorter: "alpha"
+   <head>
+      <title>API Reference (Swagger explorer) | DataConnect API</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+      <!--style type="text/css"></style-->
+      <link href="css/index.css" rel="stylesheet"/>
+      <link href='css/standalone.css' rel='stylesheet'/>
+      <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+      <link href='css/api-explorer.css' rel='stylesheet' type='text/css'/>
+      <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+      <script src='lib/jquery-1.8.0.min.js' type='text/javascript'></script>
+      <script src='lib/jquery.slideto.min.js' type='text/javascript'></script>
+      <script src='lib/jquery.wiggle.min.js' type='text/javascript'></script>
+      <script src='lib/jquery.ba-bbq.min.js' type='text/javascript'></script>
+      <script src='lib/handlebars-2.0.0.js' type='text/javascript'></script>
+      <script src='lib/underscore-min.js' type='text/javascript'></script>
+      <script src='lib/backbone-min.js' type='text/javascript'></script>
+      <script src='swagger-ui.js' type='text/javascript'></script>
+      <script src='lib/highlight.7.3.pack.js' type='text/javascript'></script>
+      <script src='lib/marked.js' type='text/javascript'></script>
+      <script src='lib/swagger-oauth.js' type='text/javascript'></script>
+      <script src='lib/bootstrap.min.js' type='text/javascript'></script>
+      <script type="text/javascript">
+         $(document).ready(function () {
+             window.location = '#!';
+         });
+         
+         jQuery.browser = jQuery.browser || {};
+         (function () {
+             jQuery.browser.msie = jQuery.browser.msie || false;
+             jQuery.browser.version = jQuery.browser.version || 0;
+             if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+                 jQuery.browser.msie = true;
+                 jQuery.browser.version = RegExp.$1;
+             }
+         })();
+      </script>
+      <script type="text/javascript">
+         $(function () {
+             var url = window.location.search.match(/url=([^&]+)/);
+             if (url && url.length > 1) {
+                 url = decodeURIComponent(url[1]);
+             } else {
+                 var loc = window.location.pathname;
+                 url = loc + "swagger.json";
+             }
+         
+             window.swaggerUi = new SwaggerUi({
+                 url: url,
+                 dom_id: "swagger-ui-container",
+                 supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
+                 onComplete: function (swaggerApi, swaggerUi) {
+                   if(typeof initOAuth == "function") {
+                     initOAuth({
+                       clientId: "1_2hkd3duxwj288ko4kgo8kog04oc0gg08wc4scssogcwgo4ko04",
+                       clientSecret: "5j2000zqa1gc0oocwskg80c8c40084o04o0kck4wosscc488k8",
+                       realm: "SANDBOX",
+                       appName: "gjallarhorn"
+                     });
+                   }
+         
+                     $('pre code').each(function (i, e) {
+                         hljs.highlightBlock(e)
+                     });
+         
+                     if (swaggerUi.options.url) {
+                         $('#input_baseUrl').val(swaggerUi.options.url);
+                     }
+                     if (swaggerUi.options.apiKey) {
+                         $('#input_apiKey').val(swaggerUi.options.apiKey);
+                     }
+         
+                     $("[data-toggle='tooltip']").tooltip();
+         
+                     addApiKeyAuthorization();
+                 },
+                 onFailure: function (data) {
+                     log("Unable to Load SwaggerUI");
+                 },
+                 docExpansion: "none",
+                 sorter: "alpha"
+             });
+         
+             function addApiKeyAuthorization() {
+                 var key = encodeURIComponent($('#input_apiKey')[0].value);
+                 if (key && key.trim() != "") {
+                     var apiKeyAuth = new SwaggerClient.ApiKeyAuthorization("Authorization", "Bearer " + key, "header");
+                     window.swaggerUi.api.clientAuthorizations.add("key", apiKeyAuth);
+                     log("added key " + key);
+                 }
+             }
+         
+             $('#input_apiKey').change(addApiKeyAuthorization);
+             // if you have an apiKey you would like to pre-populate on the page for demonstration purposes...
+             /*
+              var apiKey = "myApiKeyXXXX123456789";
+              $('#input_apiKey').val(apiKey);
+              */
+         
+             window.swaggerUi.load();
+         
+             function log() {
+                 if ('console' in window) {
+                     console.log.apply(console, arguments);
+                 }
+             }
+         });
+      </script>
+      <script type="text/javascript">
+         $(function () {
+         $('#backToTop').click(function () {
+             		$('html, body').animate({ scrollTop: 0 }, 1000);
+             	})
+             $(window).scroll(function () {
+             if ($(window).scrollTop() >= $('#header').outerHeight() && $(window).width() < 991) {
+             	$('#backToTop').fadeIn();
+             }
+             else {
+             	$('#backToTop').fadeOut();
+             }
+             if($(window).width() > 319)
+             {
+                 var sticky = $(".sticky-nav");
+         
+                 i(sticky);
+                 r(sticky);
+         
+                 function n() {
+                     return window.matchMedia("(min-width: 992px)").matches
+                 }
+         
+                 function e() {
+                     n() ? sticky.parents(".sticky-nav-placeholder").removeAttr("style") : sticky.parents(".sticky-nav-placeholder").css("min-height", sticky.outerHeight())
+                 }
+         
+                 function i(n) {
+                     n.hasClass("fixed") || (navOffset = n.offset().top);
+                     e();
+                     $(window).scrollTop() > navOffset ? $(".modal.in").length || n.addClass("fixed") : n.removeClass("fixed")
+                 }
+         
+                 function r(e) {
+                     function i() {
+                         var i = $(window).scrollTop(), r = e.parents(".sticky-nav");
+                         return r.hasClass("fixed") && !n() && (i = i + r.outerHeight() + 40), i
+                     }
+         
+                     function r(e) {
+                         var t = o.next("[data-endpoint]"), n = o.prev("[data-endpoint]");
+                         return "next" === e ? t.length ? t : o.parent().next().find("[data-endpoint]").first() : "prev" === e ? n.length ? n : o.parent().prev().find("[data-endpoint]").last() : []
+                     }
+         
+                     var nav = e.find("[data-navigator]");
+                     if (nav.find("[data-endpoint][data-selected]").length) {
+                         var o = nav.find("[data-endpoint][data-selected]"),
+                             a = $("#" + o.attr("data-endpoint")),
+                             s = a.offset().top,
+                             l = (s + a.outerHeight(), r("next")),
+                             u = r("prev");
+                         if (l.length) {
+                             {
+                                 var d = $("#" + l.attr("data-endpoint")), f = d.offset().top;
+                                 f + d.outerHeight()
+                             }
+                             i() >= f && c(l)
+                         }
+                         if (u.length) {
+                             var p = $("#" + u.attr("data-endpoint")),
+                             g = u.offset().top;
+                             v = (g + p.outerHeight(), 100);
+                             i() < s - v && c(u)
+                         }
+                     }
+                 }
+         
+                 function s() {
+                     var e = $(".sticky-nav [data-navigator]"),
+                         n = e.find("[data-endpoint]").first();
+                     n.attr("data-selected", "");
+                     u.find("[data-selected-value]").html(n.text())
+                 }
+         
+                 function c(e) {
+                     {
+                         var n = $(".sticky-nav [data-navigator]");
+                         $("#" + e.attr("data-endpoint"))
+                     }
+                     n.find("[data-resource]").removeClass("active");
+                     n.find("[data-selected]").removeAttr("data-selected");
+                     e.closest("[data-resource]").addClass("active");
+                     e.attr("data-selected", "");
+                     sticky.find("[data-selected-value]").html(e.text())
+                 }
+                }
+             });
+         
+         });
+      </script>
+      <script type="text/javascript">
+         $(function () {
+             $("[data-toggle='tooltip']").tooltip();
+         });
+      </script>
+      <script type="text/javascript">
+         $(document).ready(function(){
+         
+         $('body').on("click", "#resources_nav > div", function(event){
+         var dataUnique = $(this).attr('data-resource');
+         if($(window).width() > 767)
+         {
+         $('html, body').animate({
+              scrollTop: $('#'+dataUnique).offset().top
+            }, 600);
+         }
+         else
+         {
+         	$('html, body').animate({
+              scrollTop: ($('#'+dataUnique).offset().top-$('#header').outerHeight())
+            }, 600);
+         return false;
+         }
+         if($(window).width() < 992 && $(window).width() > 768)
+         {
+         		$( ".sticky-nav div:nth-child(3)" ).slideUp();
+         		$( ".sticky-nav p" ).slideUp();
+         		$('.mobile-nav').removeClass('navBtnActive');
+         }
+         if($(window).width() < 768)
+         {
+         		$( "#swagger_sidebar" ).css("left", "-300px");
+         		$('.mobile-nav').removeClass('navBtnActive');
+         }
+         });
+         
+         
+         
+         $('body').on('click', '.mobile-nav', function (){
+         if ($(window).width() > 767 && $(window).width() < 992) {
+         		$( ".sticky-nav div:nth-child(3)" ).slideToggle();
+         		$( ".sticky-nav p" ).slideToggle();
+         		$(this).toggleClass('navBtnActive');
+         }
+         else if ($(window).width() < 768) {
+         
+              if (!$(this).hasClass("navBtnActive") )
+         	{
+         		$( "#swagger_sidebar" ).animate({ left: "0"}, 500 );
+         		$(this).addClass('navBtnActive');
+         	}
+         	else
+         	{
+         		$( "#swagger_sidebar" ).animate({ left: "-300px" }, 500 );
+         		$(this).removeClass('navBtnActive');
+         	}
+         }
             });
-
-            function addApiKeyAuthorization() {
-                var key = encodeURIComponent($('#input_apiKey')[0].value);
-                if (key && key.trim() != "") {
-                    var apiKeyAuth = new SwaggerClient.ApiKeyAuthorization("Authorization", "Bearer " + key, "header");
-                    window.swaggerUi.api.clientAuthorizations.add("key", apiKeyAuth);
-                    log("added key " + key);
-                }
-            }
-
-            $('#input_apiKey').change(addApiKeyAuthorization);
-            // if you have an apiKey you would like to pre-populate on the page for demonstration purposes...
-            /*
-             var apiKey = "myApiKeyXXXX123456789";
-             $('#input_apiKey').val(apiKey);
-             */
-
-            window.swaggerUi.load();
-
-            function log() {
-                if ('console' in window) {
-                    console.log.apply(console, arguments);
-                }
-            }
-        });
-    </script>
-
-    <script type="text/javascript">
-
-        $(function () {
-$('#backToTop').click(function () {
-            		$('html, body').animate({ scrollTop: 0 }, 1000);
-            	})
-            $(window).scroll(function () {
-            if ($(window).scrollTop() >= $('#header').outerHeight() && $(window).width() < 991) {
-            	$('#backToTop').fadeIn();
-            }
-            else {
-            	$('#backToTop').fadeOut();
-            }
-            if($(window).width() > 319)
+         
+         $('#nav-toggle').click(function() {
+         if ($(this).hasClass("navBtnActive") )
+         {
+         	$( "#bs-navbar" ).animate({ right: "-300px"}, 500 );
+         	$( "#bs-navbar" ).removeClass('navShadow');
+         	$(this).removeClass('navBtnActive');
+         }
+         else
+         {
+         	$( "#bs-navbar" ).animate({ right: "0" }, 500 );
+         	$( "#bs-navbar" ).addClass('navShadow');
+         	$(this).addClass('navBtnActive');
+         }
+         });
+         })
+         
+         function stickySidebar() {
+         var headerHeight = $('#header').outerHeight();
+         var footerHeight = $('.footer').outerHeight();
+         var windowHeight = $(window).height();
+         var scrollPosition = $(window).scrollTop();
+         if($(window).width() > 991){
+         if (scrollPosition >= headerHeight) {
+         	console.log(windowHeight+"-"+footerHeight+"="+(windowHeight-footerHeight));
+         	$('#swagger_sidebar').css('height',(windowHeight-footerHeight-20));
+         	$('#swagger_sidebar').addClass('stickyNav');
+         }
+         else {
+         	$('#swagger_sidebar').css('height','auto');
+         	$('#swagger_sidebar').removeClass('stickyNav');
+         }
+         }
+         else if($(window).width() > 767)
+         {
+         if (scrollPosition >= headerHeight) {
+         	$('#swagger_sidebar').addClass('stickyNav');
+         }
+         else {
+         	$('#swagger_sidebar').removeClass('stickyNav');
+         }
+         }
+         else
+         {
+         $('#swagger_sidebar').removeClass('stickyNav');
+         }
+         
+         }
+         
+         
+         $(document).scroll(function(){
+         stickySidebar();
+         });
+         $(document).resize(function(){
+         stickySidebar();
+         });
+         
+           
+      </script>
+   </head>
+   <body class="page-docs">
+      <div class="head" id="header">
+         <style type="text/css">
+            #backToTop
             {
-                var sticky = $(".sticky-nav");
-
-                i(sticky);
-                r(sticky);
-
-                function n() {
-                    return window.matchMedia("(min-width: 992px)").matches
-                }
-
-                function e() {
-                    n() ? sticky.parents(".sticky-nav-placeholder").removeAttr("style") : sticky.parents(".sticky-nav-placeholder").css("min-height", sticky.outerHeight())
-                }
-
-                function i(n) {
-                    n.hasClass("fixed") || (navOffset = n.offset().top);
-                    e();
-                    $(window).scrollTop() > navOffset ? $(".modal.in").length || n.addClass("fixed") : n.removeClass("fixed")
-                }
-
-                function r(e) {
-                    function i() {
-                        var i = $(window).scrollTop(), r = e.parents(".sticky-nav");
-                        return r.hasClass("fixed") && !n() && (i = i + r.outerHeight() + 40), i
-                    }
-
-                    function r(e) {
-                        var t = o.next("[data-endpoint]"), n = o.prev("[data-endpoint]");
-                        return "next" === e ? t.length ? t : o.parent().next().find("[data-endpoint]").first() : "prev" === e ? n.length ? n : o.parent().prev().find("[data-endpoint]").last() : []
-                    }
-
-                    var nav = e.find("[data-navigator]");
-                    if (nav.find("[data-endpoint][data-selected]").length) {
-                        var o = nav.find("[data-endpoint][data-selected]"),
-                            a = $("#" + o.attr("data-endpoint")),
-                            s = a.offset().top,
-                            l = (s + a.outerHeight(), r("next")),
-                            u = r("prev");
-                        if (l.length) {
-                            {
-                                var d = $("#" + l.attr("data-endpoint")), f = d.offset().top;
-                                f + d.outerHeight()
-                            }
-                            i() >= f && c(l)
-                        }
-                        if (u.length) {
-                            var p = $("#" + u.attr("data-endpoint")),
-                            g = u.offset().top;
-                            v = (g + p.outerHeight(), 100);
-                            i() < s - v && c(u)
-                        }
-                    }
-                }
-
-                function s() {
-                    var e = $(".sticky-nav [data-navigator]"),
-                        n = e.find("[data-endpoint]").first();
-                    n.attr("data-selected", "");
-                    u.find("[data-selected-value]").html(n.text())
-                }
-
-                function c(e) {
-                    {
-                        var n = $(".sticky-nav [data-navigator]");
-                        $("#" + e.attr("data-endpoint"))
-                    }
-                    n.find("[data-resource]").removeClass("active");
-                    n.find("[data-selected]").removeAttr("data-selected");
-                    e.closest("[data-resource]").addClass("active");
-                    e.attr("data-selected", "");
-                    sticky.find("[data-selected-value]").html(e.text())
-                }
-               }
-            });
-
-        });
-    </script>
-
-    <script type="text/javascript">
-        $(function () {
-            $("[data-toggle='tooltip']").tooltip();
-        });
-    </script>
-    
-    <script type="text/javascript">
-	$(document).ready(function(){
-
-$('body').on("click", "#resources_nav > div", function(event){
-	var dataUnique = $(this).attr('data-resource');
-	if($(window).width() > 767)
-	{
-	$('html, body').animate({
-      scrollTop: $('#'+dataUnique).offset().top
-    }, 600);
-	}
-	else
-	{
-		$('html, body').animate({
-      scrollTop: ($('#'+dataUnique).offset().top-$('#header').outerHeight())
-    }, 600);
-	return false;
-	}
-	if($(window).width() < 992 && $(window).width() > 768)
-	{
-			$( ".sticky-nav div:nth-child(3)" ).slideUp();
-			$( ".sticky-nav p" ).slideUp();
-			$('.mobile-nav').removeClass('navBtnActive');
-	}
-	if($(window).width() < 768)
-	{
-			$( "#swagger_sidebar" ).css("left", "-300px");
-			$('.mobile-nav').removeClass('navBtnActive');
-	}
-});
-
-
-
-$('body').on('click', '.mobile-nav', function (){
-if ($(window).width() > 767 && $(window).width() < 992) {
-			$( ".sticky-nav div:nth-child(3)" ).slideToggle();
-			$( ".sticky-nav p" ).slideToggle();
-			$(this).toggleClass('navBtnActive');
-}
-else if ($(window).width() < 768) {
-	
-      if (!$(this).hasClass("navBtnActive") ) 
-		{
-			$( "#swagger_sidebar" ).animate({ left: "0"}, 500 );
-			$(this).addClass('navBtnActive');
-		} 
-		else 
-		{
-			$( "#swagger_sidebar" ).animate({ left: "-300px" }, 500 );
-			$(this).removeClass('navBtnActive');
-		}
-}	
-    });
-
-$('#nav-toggle').click(function() {
-	if ($(this).hasClass("navBtnActive") ) 
-	{
-		$( "#bs-navbar" ).animate({ right: "-300px"}, 500 );
-		$( "#bs-navbar" ).removeClass('navShadow');
-		$(this).removeClass('navBtnActive');
-	} 
-	else 
-	{
-		$( "#bs-navbar" ).animate({ right: "0" }, 500 );
-		$( "#bs-navbar" ).addClass('navShadow');
-		$(this).addClass('navBtnActive');
-	}	
-});
-})
-
-function stickySidebar() {
-var headerHeight = $('#header').outerHeight();
-var footerHeight = $('.footer').outerHeight();
-var windowHeight = $(window).height();
-var scrollPosition = $(window).scrollTop();
-if($(window).width() > 991){
-	if (scrollPosition >= headerHeight) {
-		console.log(windowHeight+"-"+footerHeight+"="+(windowHeight-footerHeight));
-		$('#swagger_sidebar').css('height',(windowHeight-footerHeight-20));
-		$('#swagger_sidebar').addClass('stickyNav');
-	}
-	else {
-		$('#swagger_sidebar').css('height','auto');
-		$('#swagger_sidebar').removeClass('stickyNav');
-	}
-}
-else if($(window).width() > 767)
-{
-	if (scrollPosition >= headerHeight) {
-		$('#swagger_sidebar').addClass('stickyNav');
-	}
-	else {
-		$('#swagger_sidebar').removeClass('stickyNav');
-	}
-}
-else
-{
-	$('#swagger_sidebar').removeClass('stickyNav');
-}
-		
-}
-
-
-$(document).scroll(function(){
-stickySidebar();
-});
-$(document).resize(function(){
-stickySidebar();
-});
-
-	  </script>
-
-</head>
-
-<body class="page-docs">
-<div class="head" id="header">
-<style type="text/css">
-#backToTop
-{
-padding-left: 14px;
-    font-size: 26px;
-    color: #fff;  height: 40px;
-    width: 40px;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: rgba(0, 0, 0, 0.498039);
-}
-#backToTop:hover
-{
-text-decoration: none;
-}
-</style>
-<a id="backToTop" style="display: none;">&uarr;</a>
-        	<div class="container">
-            	<div class="logo pull-left">
-            		<a title="" href="https://developers.itembase.com"><img class="white-logo" src="images/logo.png" alt="Item based"></a>
-            	</div>
-                
-                <div class="pull-right">
-                    <div class="navbar navbar-static-top bs-docs-nav" role="banner">
-                    <div class="navbar-header">
-                        <button id="nav-toggle" class="navbar-toggle collapsed" type="button">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                        </button>
-                    </div>
-                    <nav id="bs-navbar">
-                        <ul class="nav navbar-nav">
-                            <li><a href="https://developers.itembase.com/products">Product</a></li>
-                            <li class="dropdown active"><a href="https://developers.itembase.com/api">API</a>
-                            	<ul class="container">
-                                    <li><a href="http://itembase.github.io/api-guides/">Guides</a></li>
-                                    <li class="active"><a href="https://developers.itembase.com/api/docs/">API Reference</a></li>
-                                    <li><a href="https://developers.itembase.com/api/clients">API Client Management</a></li>
-                                    <li><a href="https://itembase.github.io/api-notes/">Developer Notes</a></li>
-                                    <li><a href="https://developers.itembase.com/contact/api_feedback">Report An Issue</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="https://developers.itembase.com/api/docs/">API Reference</a></li>
-                            <li class="login"><a href="https://developers.itembase.com/google-login">Login with itembase</a></li>
-                        </ul>
-                    </nav>
-                 </div>
-                </div>
+            padding-left: 14px;
+            font-size: 26px;
+            color: #fff;  height: 40px;
+            width: 40px;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.498039);
+            }
+            #backToTop:hover
+            {
+            text-decoration: none;
+            }
+         </style>
+         <a id="backToTop" style="display: none;">&uarr;</a>
+         <div class="container">
+            <div class="logo pull-left">
+               <a title="" href="https://api.itembase.com"><img class="white-logo" src="images/logo.png" alt="Item based"></a>
             </div>
-        </div>
-
-<section class="content">
-    <div id="api2-explorer">
-        <div class="swagger-section page-docs" style="zoom: 1">
-            <div class="main-section">
-            	<div class="container">
-                	<div id="swagger-ui-container" class="swagger-ui-wrap">
-                    
-                    </div>
-                </div>
+            <div class="pull-right">
+               <div class="navbar navbar-static-top bs-docs-nav" role="banner">
+                  <div class="navbar-header">
+                     <button id="nav-toggle" class="navbar-toggle collapsed" type="button">
+                     <span class="sr-only">Toggle navigation</span>
+                     <span class="icon-bar"></span>
+                     </button>
+                  </div>
+                  <nav id="bs-navbar">
+                     <ul class="nav navbar-nav">
+                        <li><a href="https://api.itembase.com/products">Product</a></li>
+                        <li class="dropdown active">
+                           <a href="https://api.itembase.com/api">API</a>
+                           <ul class="container">
+                              <li><a href="http://itembase.github.io/api-guides/">Guides</a></li>
+                              <li class="active"><a href="https://api.itembase.com/api/docs/">API Reference</a></li>
+                              <li><a href="https://api.itembase.com/api/clients">API Client Management</a></li>
+                              <li><a href="https://itembase.github.io/api-notes/">Developer Notes</a></li>
+                              <li><a href="https://github.com/itembase/data-connect-api">Report An Issue</a></li>
+                              <li><a href="http://status.api.itembase.com/">API Status</a></li>
+                           </ul>
+                        </li>
+                        <li class="active"><a href="https://api.itembase.com/api/docs/">API Reference</a></li>
+                        <li class="login"><a href="https://api.itembase.com/google-login">Login with itembase</a></li>
+                     </ul>
+                  </nav>
+               </div>
             </div>
-        </div>
-    </div>
-</section>
-<div class="footer text-center">
-    	<div class="container">
-        	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis <br>nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu M<br>fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
-            
-            <ul class="navigation">
-            	<li><a href="#">Pricing</a></li>
-                <li><a href="#">Contact sales</a></li>
-                <li><a href="#">Support</a></li>
-                <li><a href="#">Security</a></li>
-                <li><a href="#">Blog</a></li>
-                <li><a href="#">Press</a></li>
-                <li><a href="#">Careers</a></li>
+         </div>
+      </div>
+      <section class="content">
+         <div id="api2-explorer">
+            <div class="swagger-section page-docs" style="zoom: 1">
+               <div class="main-section">
+                  <div class="container">
+                     <div id="swagger-ui-container" class="swagger-ui-wrap">
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+      <div class="footer text-center">
+         <div class="container">
+            <p>(c) 2016 itembase GmbH</p>
+            <ul class="menu nav">
+               <li>
+                  <a href="https://api.itembase.com/contact">Contact</a>
+               </li>
+               <li>
+                  <a href="https://api.itembase.com/legal">Legal</a>
+               </li>
             </ul>
-        </div>
-    </div>
-</body>
+         </div>
+      </div>
+   </body>
 </html>
-
