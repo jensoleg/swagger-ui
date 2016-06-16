@@ -7,6 +7,7 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
     'submit .sandbox': 'submitOperation',
     'click .submit': 'submitOperation',
     'click  a.toggle-samples': 'toggleSamples',
+    'focusin': 'makeCodeMirror',
     'snippet': 'snippetToCodeMirror'
 //    'mouseenter .api-ic': 'mouseEnter',
 //    'mouseout .api-ic': 'mouseExit'
@@ -310,16 +311,27 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
     var signatureView = new SwaggerUi.Views.SignatureView({model: bodySample, tagName: 'div'});
     $('.model-signature', $(this.el)).append(signatureView.render().el);
 
-    var $editor = this.$el.find('textarea.body-textarea');
-    this.codeMirror = CodeMirror.fromTextArea($editor[0], {json: true});
   },
 
   snippetToCodeMirror: function (e, snippet) {
-    if (this.codeMirror) {
+    var codeMirror = this.getCodeMirror();
+    if (codeMirror) {
       this.codeMirror.setValue(snippet || '');
     }
   },
 
+  makeCodeMirror: function() {
+    getCodeMirror();
+    return true;
+  },
+
+  getCodeMirror: function() {
+    if (!this.codeMirror) {
+      var $editor = this.$el.find('textarea.body-textarea');
+      this.codeMirror = CodeMirror.fromTextArea($editor[0], {json: true});
+    }
+    return this.codeMirror;
+  },
 
   addParameter: function (param, consumes) {
     // Render a parameter
