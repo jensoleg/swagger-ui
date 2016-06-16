@@ -321,7 +321,7 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
   },
 
   makeCodeMirror: function() {
-    getCodeMirror();
+    this.getCodeMirror();
     return true;
   },
 
