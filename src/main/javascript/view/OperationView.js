@@ -328,7 +328,9 @@ SwaggerUi.Views.OperationView = Backbone.View.extend({
   getCodeMirror: function() {
     if (!this.codeMirror) {
       var $editor = this.$el.find('textarea.body-textarea');
-      this.codeMirror = CodeMirror.fromTextArea($editor[0], {json: true});
+      if ($editor.length > 0) {
+        this.codeMirror = CodeMirror.fromTextArea($editor[0], {json: true});
+      }
     }
     return this.codeMirror;
   },
