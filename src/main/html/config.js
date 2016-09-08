@@ -36,7 +36,7 @@ $(function () {
     apiKey: apiKey,
     removeApiInput: removeApiInput,
     dom_id: "swagger-ui-container",
-    supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
+    supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch', 'head'],
     onComplete: function (swaggerApi, swaggerUi) {
       $('#spinner-container').hide();
 
