@@ -1598,10 +1598,13 @@ body {
 
     .swagger-section #resources a.toggle-samples {
         display: inline-block;
-        position: absolute;
+        position: fixed;
         top: 30px;
         right: 20px;
         color: #5c666f;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 6px;
+        border-radius: 6px;
         text-decoration: none;
         cursor: pointer
     }
