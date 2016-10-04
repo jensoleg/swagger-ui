@@ -1602,8 +1602,8 @@ body {
         top: 30px;
         right: 20px;
         color: #5c666f;
-        background: #fff;
-        padding: 6px;
+        background: rgba(255, 255, 255, 0.8);
+        padding: 6px 8px;
         border-radius: 6px;
         text-decoration: none;
         cursor: pointer
