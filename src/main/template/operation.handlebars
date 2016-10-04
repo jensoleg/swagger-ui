@@ -15,10 +15,12 @@
                 </h3>
             </div>
 
+            {{#if_eq parentId 'API_Reference'}}
             <a href="javascript:;" class="toggle-samples" data-toggle="tooltip" data-placement="left"
                data-original-title title>
                 <span class="text">Show samples</span><span class="circle-icon"></span>
             </a>
+            {{/if_eq}}
 
             {{#if deprecated}}
                 <h4>Warning: Deprecated</h4>
