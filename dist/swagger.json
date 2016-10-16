@@ -1,1067 +1,1053 @@
 {
     "swagger": "2.0",
     "info": {
-        "title": "Maps4News API",
-        "version": "0.1"
+        "title": "Move your app forward with the Senodio IoT platform API",
+        "description": "Move your app forward with the Senodio API. The security and authorization api is provided by Auth0. For more information go to [Auth0 api documentation](https://auth0.com/docs/api). The authentication api is proxied through the Senodio server through the /authenticate path of the api server. The HTTP inteface to the MQTT message broker is an alternative to the raw MQTT api. You can explore the MQTT broker api at [ecs.mqtt.bobbytech.dk](http://ecs.mqtt.bobbytech.dk/)",
+        "version": "1.0.0",
+        "termsOfService": "http://senodio.dk/terms/",
+        "contact": {
+            "name": "api@senodio.dk"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
     },
-    "host": "api.maps4news.com",
+    "host": "ecs.api.bobbytech.dk",
+    "basePath": "/api",
     "schemes": [
-        "https"
+        "http"
     ],
-    "basePath": "/v1",
+    "consumes": [
+        "application/json"
+    ],
     "produces": [
         "application/json"
     ],
     "paths": {
-        "/login": {
+        "/authenticate/oauth/ro": {
             "post": {
-                "description": "This endpoint allows the user to authenticate and obtain an api key.\n",
-                "parameters": [
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "description": "The user's email",
-                        "required": true,
-                        "type": "string",
-                        "format": "email"
-                    },
-                    {
-                        "name": "password",
-                        "in": "query",
-                        "description": "The user's password",
-                        "required": true,
-                        "type": "string",
-                        "format": "password"
-                    }
-                ],
                 "tags": [
-                    "User",
                     "Authentication"
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Api Token",
-                        "schema": {
-                            "$ref": "#/definitions/Token"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    },
-                    "401": {
-                        "description": "Invalid or missing api token",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    }
-                }
-            }
-        },
-        "/users": {
-            "get": {
-                "description": "Get all users you have acess to.\n\n- Organisation admins will get all users in their organisation.\n\n- Normal users will only get their own user object.\n",
-                "tags": [
-                    "User"
-                ],
-                "security": [
+                "summary": "Login to api server",
+                "description": "Login to api server",
+                "parameters": [
                     {
-                        "api_key": []
+                        "in": "body",
+                        "name": "Login",
+                        "description": "Login information",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Login"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Array of user objects.",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/User"
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Invalid or missing api token.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Successful response"
                     }
                 }
             }
         },
-        "/users/{id}": {
+        "/auth/users": {
             "get": {
-                "description": "Used to get a user that you have access to.",
                 "tags": [
-                    "User"
+                    "Users"
                 ],
-                "security": [
-                    {
-                        "api_key": []
+                "summary": "Get users",
+                "description": "Get users",
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
                     }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get users",
+                "description": "Get users",
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
+        },
+        "/auth/users/{user_id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get a user",
+                "description": "Get a user",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "user_id",
+                        "description": "Id of user that needs to be fetched",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
+        },
+        "/installations": {
+            "get": {
+                "tags": [
+                    "Installation"
+                ],
+                "summary": "Retrieve all installations",
+                "description": "Gets `Installation` objects.",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/Installation"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Installation"
+                ],
+                "summary": "Add an installation",
+                "description": "Add `Installation` object.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
                 ],
                 "parameters": [
                     {
-                        "$ref": "#/parameters/id"
+                        "in": "body",
+                        "name": "Installation",
+                        "description": "Installation",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Installation"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "User object.",
+                        "description": "Successful response",
                         "schema": {
-                            "$ref": "#/definitions/User"
-                        }
-                    },
-                    "401": {
-                        "description": "Invalid or missing api token.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
+                            "$ref": "#/definitions/Installation"
                         }
                     }
                 }
             }
         },
-        "/users/me": {
+        "/installations/{installationId}": {
             "get": {
-                "description": "Alias of `/users/{id}`. (All subroutes are compatible. e.g. `/users/me/svgs`)\n\nGet the current users's object\n",
                 "tags": [
-                    "User"
+                    "Installation"
                 ],
-                "security": [
-                    {
-                        "api_key": []
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Array of svg objects.",
-                        "schema": {
-                            "$ref": "#/definitions/User"
-                        }
-                    },
-                    "401": {
-                        "description": "Invalid or missing api token.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/{id}/dimensions": {
-            "get": {
-                "description": "Get all the dimensions the user has access to.",
-                "tags": [
-                    "User",
-                    "Dimension"
-                ],
-                "security": [
-                    {
-                        "api_key": []
-                    }
+                "summary": "Retrieve an installation",
+                "description": "Gets `Installation` objects.",
+                "produces": [
+                    "application/json"
                 ],
                 "parameters": [
                     {
-                        "$ref": "#/parameters/id"
-                    },
-                    {
-                        "$ref": "#/parameters/page"
-                    },
-                    {
-                        "$ref": "#/parameters/per_page"
-                    },
-                    {
-                        "$ref": "#/parameters/X-Page"
-                    },
-                    {
-                        "$ref": "#/parameters/X-Per-Page"
+                        "in": "path",
+                        "name": "installationId",
+                        "description": "ID of installation that needs to be fetched",
+                        "required": true,
+                        "type": "string"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Array of dimension objects.",
+                        "description": "Successful response",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Dimension"
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Invalid or missing api token.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
+                            "$ref": "#/definitions/Installation"
                         }
                     }
                 }
-            }
-        },
-        "/users/{id}/svgs": {
-            "get": {
-                "description": "Get all the svgs the user has access to.",
+            },
+            "put": {
                 "tags": [
-                    "User",
-                    "Svg"
+                    "Installation"
                 ],
-                "security": [
-                    {
-                        "api_key": []
-                    }
+                "summary": "Update an installation",
+                "description": "Update `Installation` object.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
                 ],
                 "parameters": [
                     {
-                        "$ref": "#/parameters/id"
+                        "in": "path",
+                        "name": "installationId",
+                        "description": "ID of installation that needs to be fetched",
+                        "required": true,
+                        "type": "string"
                     },
                     {
-                        "$ref": "#/parameters/page"
-                    },
-                    {
-                        "$ref": "#/parameters/per_page"
-                    },
-                    {
-                        "$ref": "#/parameters/X-Page"
-                    },
-                    {
-                        "$ref": "#/parameters/X-Per-Page"
+                        "in": "body",
+                        "name": "Installation",
+                        "description": "Installation",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Installation"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Array of svg objects.",
+                        "description": "Successful response",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Svg"
-                            }
+                            "$ref": "#/definitions/Installation"
                         }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Installation"
+                ],
+                "summary": "Remove an installation",
+                "description": "Remove `Installation` object.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "installationId",
+                        "description": "ID of installation that needs to be fetched",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
+        },
+        "/installations/{installationId}/devices": {
+            "post": {
+                "tags": [
+                    "Device"
+                ],
+                "summary": "Add a device to an installation",
+                "description": "Add a `Device` object.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "installationId",
+                        "description": "ID of installation",
+                        "required": true,
+                        "type": "string"
                     },
-                    "401": {
-                        "description": "Invalid or missing api token.",
+                    {
+                        "in": "body",
+                        "name": "Device",
+                        "description": "Device object",
+                        "required": true,
                         "schema": {
-                            "$ref": "#/definitions/Error"
+                            "$ref": "#/definitions/Device"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/Device"
                         }
                     }
                 }
             }
-        }
-    },
-    "parameters": {
-        "id": {
-            "name": "id",
-            "in": "path",
-            "description": "The ID of the resource.",
-            "required": true,
-            "type": "integer"
         },
-        "page": {
-            "name": "page",
-            "in": "query",
-            "description": "The page you want to visit.\n\n- Default: 1\n",
-            "required": false,
-            "type": "integer"
+        "/installations/{installationId}/devices/{deviceId}": {
+            "get": {
+                "tags": [
+                    "Device"
+                ],
+                "summary": "Retrieve a device",
+                "description": "Get `Device` object.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "installationId",
+                        "description": "ID of installation",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "deviceId",
+                        "description": "ID of device",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/Device"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Device"
+                ],
+                "summary": "Update a device configuration",
+                "description": "Update `Device` object.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "installationId",
+                        "description": "ID of installation",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "deviceId",
+                        "description": "ID of device",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "Device",
+                        "description": "Device object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Device"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/Device"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Device"
+                ],
+                "summary": "Remove a device from an installation",
+                "description": "Delete `Device` object.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "installationId",
+                        "description": "ID of installation",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "deviceId",
+                        "description": "ID of device",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
         },
-        "per_page": {
-            "name": "per_page",
-            "in": "query",
-            "description": "The number of resources on one page\n\n- Default: 12\n\n- Minimum: 1\n\n- Maximum: 50\n",
-            "type": "integer",
-            "required": false
+        "/installations/{installationId}/devices/{deviceId}/controls": {
+            "post": {
+                "tags": [
+                    "Control/Sensor"
+                ],
+                "summary": "Add a control/sensor to a device",
+                "description": "Add a `Control` object to a 'Device' object.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "installationId",
+                        "description": "ID of installation",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "deviceId",
+                        "description": "ID of device",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "Control",
+                        "description": "Control object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Control"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/Control"
+                        }
+                    }
+                }
+            }
         },
-        "X-Per-Page": {
-            "name": "X-Per-Page",
-            "in": "header",
-            "description": "Same as `per_page`",
-            "type": "integer",
-            "required": false
+        "/installations/{installationId}/devices/{deviceId}/controls/{controlId}": {
+            "get": {
+                "tags": [
+                    "Control/Sensor"
+                ],
+                "summary": "Retrieve a control/sensor",
+                "description": "Get `Control` object.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "installationId",
+                        "description": "ID of installation",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "deviceId",
+                        "description": "ID of device",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "controlId",
+                        "description": "ID of control",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/Control"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Control/Sensor"
+                ],
+                "summary": "Update a control/sensor configuration",
+                "description": "Update `Device` object.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "installationId",
+                        "description": "ID of installation",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "deviceId",
+                        "description": "Id of device",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "controlId",
+                        "description": "Id of control",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "Control",
+                        "description": "Control object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Device"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/Control"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Control/Sensor"
+                ],
+                "summary": "Delete a control/sensor",
+                "description": "Delete `Control` object in Device",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "installationId",
+                        "description": "Id of installation",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "deviceId",
+                        "description": "Id of device",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "controlId",
+                        "description": "Id of control",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
         },
-        "X-Page": {
-            "name": "X-Page",
-            "in": "header",
-            "type": "integer",
-            "description": "Same as `page`",
-            "required": false
-        }
-    },
-    "securityDefinitions": {
-        "api_key": {
-            "type": "apiKey",
-            "name": "X-Api-Token",
-            "description": "The api token",
-            "in": "header"
+        "/agent/{deviceId}": {
+            "delete": {
+                "tags": [
+                    "Device agent"
+                ],
+                "summary": "Deactivate device",
+                "description": "Deactive device",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "installationId",
+                        "description": "Id of device",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "deviceId",
+                        "description": "Id of device",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Device agent"
+                ],
+                "summary": "Activate device",
+                "description": "Activate device with configuration query parameters.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "config",
+                        "description": "Id of device",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "installationId",
+                        "description": "Id of installation",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "deviceID",
+                        "description": "Id of device",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "interval",
+                        "description": "Post interval for sensor data",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "deviceId",
+                        "description": "Id of device",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
+        },
+        "/datastreams/{deviceId}/{controlId}": {
+            "get": {
+                "tags": [
+                    "Datastream"
+                ],
+                "summary": "Retrieve sensor data collection",
+                "description": "Retrieve sensor data collection",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "from",
+                        "description": "From date timestamp",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "in": "query",
+                        "name": "to",
+                        "description": "To date timestamp",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "Max number of observations",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "query",
+                        "name": "interval",
+                        "description": "Resolution of observations. 1 (seconds), 60 (minutes), 3600 (hours)",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "query",
+                        "name": "format",
+                        "description": "Format of response hash -> hash, timestamp -> [x,y], time -> [ms,y]",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "path",
+                        "name": "deviceId",
+                        "description": "Id of device",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "controlId",
+                        "description": "Id of sensor",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
+        },
+        "/broker/{deviceId}/{controlId}": {
+            "post": {
+                "tags": [
+                    "Message broker"
+                ],
+                "summary": "Publish sensor data without retaining",
+                "description": "Publish sensor data without retaining",
+                "consumes": [
+                    "application/text"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "deviceId",
+                        "description": "Id of Device",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "controlId",
+                        "description": "Id of Control/Sensor",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "message",
+                        "description": "Message",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Message broker"
+                ],
+                "summary": "Get latest published sensor data",
+                "description": "Get latest published sensor data",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "deviceId",
+                        "description": "Id of Device",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "controlId",
+                        "description": "Id of Control/Sensor",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Message broker"
+                ],
+                "summary": "Publish and retain sensor value",
+                "description": "Publish and retain sensor value",
+                "consumes": [
+                    "application/text"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "deviceId",
+                        "description": "Id of Device",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "controlId",
+                        "description": "Id of Control/Sensor",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "message",
+                        "description": "Message",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Message broker"
+                ],
+                "summary": "Reset sensor value",
+                "description": "Reset sensor value",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "deviceId",
+                        "description": "Id of Device",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "controlId",
+                        "description": "Id of Control/Sensor",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
         }
     },
     "definitions": {
-        "timestamp": {
-            "type": "string",
-            "format": "DateTime",
-            "description": "ISO 8601/RFC3339 formatted DateTime",
-            "example": "2016-03-17T16:35:01.000Z"
-        },
-        "Token": {
-            "type": "object",
-            "properties": {
-                "token": {
-                    "type": "string",
-                    "description": "Unique user token used for identification",
-                    "example": "Pjde6XYkfOhRErZaFn0ibNVbXGP4CE8UcUpMDBg4"
-                }
-            }
-        },
-        "Error": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string",
-                    "description": "Error message",
-                    "example": "An error occoured"
-                }
-            }
-        },
-        "Contract": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "example": "string"
-                },
-                "organisation": {
-                    "$ref": "#/definitions/Organisation"
-                },
-                "credits": {
-                    "type": "integer",
-                    "description": "The amount of credits that this contract adds to the organisation. If the value is 0 then the contract is a flatrate contract.",
-                    "example": 100
-                },
-                "credit_period": {
-                    "type": "integer",
-                    "description": "The number of credits that can be used within a certain period."
-                },
-                "period_length": {
-                    "type": "integer",
-                    "description": "The lenght of a period, in days."
-                },
-                "date_start": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "date_end": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "Dimension": {
-            "type": "object",
+        "Installation": {
             "properties": {
                 "id": {
-                    "type": "integer",
-                    "example": 47
-                },
-                "dimension_set_id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "A5 landscape"
-                },
-                "width": {
-                    "type": "number",
-                    "format": "float"
-                },
-                "height": {
-                    "type": "number",
-                    "format": "float"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "DimensionSet": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Standard"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "dimensions": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Dimension"
-                    }
-                }
-            }
-        },
-        "Faq": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "description": "Identifier",
-                    "example": 1
-                },
-                "title": {
-                    "type": "string",
-                    "description": "Question",
-                    "example": "Frequently asked question"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Answer",
-                    "example": "Unescaped HTML formatted answer"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "Feature": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 4
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Web"
-                },
-                "description": {
-                    "type": "string",
-                    "example": "Allows web output"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "Font": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "example": "Helvetica-Condensed-Bold"
-                },
-                "style": {
-                    "type": "string",
-                    "enum": [
-                        "normal",
-                        "italic",
-                        "oblique",
-                        "bold",
-                        "thin"
-                    ],
-                    "example": "normal"
-                },
-                "weight": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "example": 700
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "FontFamily": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "example": "Helvetica Condensed"
-                },
-                "fonts": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Font"
-                    }
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "IP": {
-            "type": "object",
-            "properties": {
-                "user_id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "ip_address": {
-                    "type": "string",
-                    "description": "IPv4 or IPv6 address"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "Job": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "user_id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "mapstyle_set": {
-                    "$ref": "#/definitions/MapstyleSet"
-                },
-                "title": {
-                    "type": "string",
-                    "description": "Title for the job"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Description of the job"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "JobResult": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "job": {
-                    "$ref": "#/definitions/Job"
-                },
-                "job_revision": {
-                    "$ref": "#/definitions/JobRevision"
-                },
-                "mapstyle": {
-                    "$ref": "#/definitions/Mapstyle"
-                },
-                "status": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "software_version": {
-                    "type": "integer",
-                    "format": "double",
-                    "example": 1,
-                    "description": "The version of the backend that was used"
-                },
-                "interface_version": {
-                    "type": "string",
-                    "example": "2.6.0b",
-                    "description": "The version of the frontend that was used"
-                },
-                "fix": {
-                    "type": "boolean",
-                    "example": true
-                },
-                "process_start": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "process_end": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "dealt_with": {
-                    "type": "boolean",
-                    "example": true,
-                    "description": "If the issue has been resolved"
-                },
-                "log": {
-                    "type": "string",
-                    "description": "The  log from the render job"
-                },
-                "preview_path": {
                     "type": "string"
                 },
-                "file_path": {
+                "name": {
                     "type": "string"
                 },
-                "bought": {
-                    "type": "boolean",
-                    "example": true,
-                    "description": "If the user paid for the map with a credit"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "JobRevision": {
-            "type": "object",
-            "properties": {
-                "job_id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "revision": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "object": {
-                    "type": "string",
-                    "format": "json"
-                },
-                "screenshot_url": {
-                    "type": "string",
-                    "example": "http://url.to/image.png"
-                },
-                "archived": {
-                    "type": "boolean",
-                    "description": "If the revision was used in a render job"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "JobShare": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "job": {
-                    "$ref": "#/definitions/Job"
-                },
-                "visibility": {
-                    "type": "string",
-                    "enum": [
-                        "private",
-                        "organisation",
-                        "public"
-                    ],
-                    "description": "Who can view the jobshare."
-                },
-                "hashkey": {
-                    "type": "integer",
-                    "example": 1769919554
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "Language": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "example": "English"
-                },
-                "code": {
-                    "type": "string",
-                    "description": "3 character language code",
-                    "example": "eng"
-                },
-                "locale": {
-                    "type": "string",
-                    "example": "en_GB"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "Mapstyle": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "mapstyle_set_id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "NEWS10k.xml"
-                },
-                "preview_image": {
-                    "type": "string",
-                    "description": "url to the mapstyle preview image"
-                },
-                "scale_min": {
-                    "minimum": 0,
-                    "example": 0,
-                    "description": "The lowest scale that the Mapstyle can be used at. Must be smaller than scale_min"
-                },
-                "scale_max": {
-                    "minimum": 1,
-                    "example": 16249,
-                    "description": "The highest scale that the Mapstyle can be used at. Must be greater than scale_min"
-                },
-                "description": {
-                    "type": "string",
-                    "example": 70
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "MapstyleSet": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Clear News"
-                },
-                "description": {
-                    "type": "string",
-                    "example": "A clean and simplified bright map style."
-                },
-                "version": {
-                    "type": "number",
-                    "format": "double",
-                    "example": 2
-                },
-                "supports_svg": {
-                    "type": "boolean",
-                    "description": "Indicates if the MapstyleSet supports SVG output",
-                    "example": false
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "mapstyles": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Mapstyle"
-                    }
-                }
-            }
-        },
-        "Notification": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "title": {
-                    "type": "string",
-                    "example": "Maps4News Maintenance message"
-                },
-                "description": {
-                    "type": "string",
-                    "example": "Maps4News Maintenance Message: Maintenance is scheduled for Tuesday, 13 October 2015, between 05:00 AM and 05:30 AM GMT. {...}"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "Organisation": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "ACME Inc Editors"
-                },
-                "company": {
-                    "type": "string",
-                    "example": "ACME Inc"
-                },
-                "city": {
-                    "type": "string",
-                    "example": "New York City"
-                },
-                "country": {
-                    "type": "string",
-                    "example": "United States"
+                "placement": {
+                    "type": "string"
                 },
                 "address": {
-                    "type": "string",
-                    "example": "14 North Moore Street"
+                    "type": "string"
                 },
-                "credits": {
-                    "type": "integer",
-                    "description": "Availible credits",
-                    "example": 27
+                "contact": {
+                    "$ref": "#/definitions/Contact"
                 },
-                "sales_representative": {
-                    "$ref": "#/definitions/User"
-                },
-                "manager": {
-                    "$ref": "#/definitions/User"
-                },
-                "fonts": {
+                "devices": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/Font"
-                    }
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "users": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/User"
+                        "$ref": "#/definitions/Device"
                     }
                 }
             }
         },
-        "SingleSignOn": {
+        "Contact": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "user": {
-                    "$ref": "#/definitions/User"
-                },
-                "sso_id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "type": {
-                    "type": "string",
-                    "example": "accounts.google.com",
-                    "description": "The sso service"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "StudioLog": {
-            "type": "object"
-        },
-        "Svg": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "svg_set": {
-                    "$ref": "#/definitions/SvgSet"
-                },
                 "name": {
-                    "type": "string",
-                    "example": "White Box",
-                    "description": "The name of the svg"
-                },
-                "svg_string": {
-                    "type": "string",
-                    "format": "svg"
-                },
-                "resize_factor": {
-                    "type": "integer",
-                    "format": "float",
-                    "example": 0.1
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "SvgSet": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Textboxes",
-                    "description": "The name of the svg set"
-                },
-                "svg_set_type": {
-                    "$ref": "#/definitions/SvgSetType"
-                },
-                "supports_interactive": {
-                    "type": "boolean",
-                    "example": true,
-                    "description": "If the svg set is supported by interactive"
-                },
-                "import": {
-                    "type": "boolean",
-                    "example": true
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
-                }
-            }
-        },
-        "SvgSetType": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Icons"
-                }
-            }
-        },
-        "User": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "description": "Full Name",
-                    "example": "John Doe"
+                    "type": "string"
                 },
                 "email": {
-                    "type": "string",
-                    "example": "john.doe@example.com"
+                    "type": "string"
                 },
                 "phone": {
-                    "type": "string",
-                    "example": "+1 555 2368",
-                    "description": "Who you gonna call? https://nnmm.nl/?F7p"
+                    "type": "string"
                 },
-                "profession": {
-                    "type": "string",
-                    "example": "Editor"
-                },
-                "organisation_id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "language": {
-                    "$ref": "#/definitions/Language"
-                },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
-                },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
+                "website": {
+                    "type": "string"
                 }
             }
         },
-        "VectorLayer": {
-            "type": "object",
+        "Device": {
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "placement": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "noOfAlarms": {
+                    "type": "integer"
+                },
+                "interval": {
+                    "type": "integer"
+                },
+                "controls": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Control"
+                    }
+                }
+            }
+        },
+        "Control": {
             "properties": {
                 "id": {
-                    "type": "integer",
-                    "example": 1
+                    "type": "string"
                 },
                 "name": {
                     "type": "string"
                 },
-                "path": {
+                "isState": {
+                    "type": "boolean"
+                },
+                "metadata": {
                     "type": "string"
                 },
-                "bounding_box": {
+                "ctrlType": {
                     "type": "string"
                 },
-                "version": {
-                    "type": "integer",
-                    "format": "double"
+                "minValue": {
+                    "type": "integer"
                 },
-                "image": {
+                "maxValue": {
+                    "type": "integer"
+                },
+                "minCritical": {
+                    "type": "integer"
+                },
+                "maxCritical": {
+                    "type": "integer"
+                },
+                "scale": {
+                    "type": "integer"
+                },
+                "timers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Timer"
+                    }
+                },
+                "unit": {
+                    "$ref": "#/definitions/Unit"
+                }
+            }
+        },
+        "Unit": {
+            "properties": {
+                "symbol": {
                     "type": "string"
                 },
-                "scale_min": {
-                    "minimum": 0,
-                    "example": 0,
-                    "description": "The lowest scale that the vector layer can be used at. Must be smaller than scale_max."
+                "units": {
+                    "type": "string"
                 },
-                "scale_max": {
-                    "minimum": 1,
-                    "example": 16249,
-                    "description": "The highest scale that the vector layer can be used at. Must be greater than scale_min."
+                "precision": {
+                    "type": "integer"
                 },
-                "created_at": {
-                    "$ref": "#/definitions/timestamp"
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "Timer": {
+            "properties": {
+                "name": {
+                    "type": "string"
                 },
-                "updated_at": {
-                    "$ref": "#/definitions/timestamp"
+                "enabled": {
+                    "type": "boolean"
+                },
+                "time": {
+                    "type": "string"
+                },
+                "timestamp": {
+                    "type": "integer"
+                },
+                "duration": {
+                    "type": "integer"
+                }
+            }
+        },
+        "Login": {
+            "properties": {
+                "client_id": {
+                    "type": "string",
+                    "default": "kpWrEQ5gJclwuAljKpHgNcJA3NwNZ0FL"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "connection": {
+                    "type": "string",
+                    "default": "Username-Password-Authentication"
+                },
+                "grant_type": {
+                    "type": "string",
+                    "format": "password",
+                    "default": "password"
+                },
+                "scope": {
+                    "type": "string",
+                    "default": "openid"
                 }
             }
         }

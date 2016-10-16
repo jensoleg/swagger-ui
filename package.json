@@ -1,5 +1,9 @@
 {
   "name": "swagger-ui",
+  "engines": {
+    "node": "4.2.1",
+    "npm": "3.3.10"
+  },
   "author": "Tony Tam <fehguy@gmail.com>",
   "contributors": [{
     "name": "Mohsen Azimi",
@@ -21,17 +25,14 @@
     "pretest": "npm run jshint",
     "test": "mocha"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/swagger-api/swagger-ui.git"
+  "dependencies": {
+    "express": "^4.12.0"
   },
-  "readmeFilename": "README.md",
   "devDependencies": {
     "chai": "^2.1.0",
     "cors": "^2.5.3",
     "docco": "^0.7.0",
     "event-stream": "^3.2.2",
-    "express": "^4.12.0",
     "gulp": "^3.8.11",
     "gulp-clean": "^0.3.1",
     "gulp-concat": "^2.5.2",
