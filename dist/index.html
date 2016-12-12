@@ -46,7 +46,8 @@
             if (url && url.length > 1) {
                 url = decodeURIComponent(url[1]);
             } else {
-                url = window.location.toString().replace(/\/*#?.*/, '/swagger.json');
+                // Default endpoint for swagger files
+                url = window.location.origin + "/swagger-file";
             }
 
             window.swaggerUi = new SwaggerUi({
