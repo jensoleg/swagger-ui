@@ -1,3 +1,14 @@
+#basic_auth_button .auth_icon {
+  background-image: url('../images/password.jpeg');
+  width: 32px;
+  height: 32px;
+}
+#basic_auth_container .auth_field {
+  margin-bottom: 20px;
+}
+#basic_auth_container #apply_basic_auth {
+  color: #000;
+}
 .swagger-section .swagger-collapse:before {
   content: "-";
 }

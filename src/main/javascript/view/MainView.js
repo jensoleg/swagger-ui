@@ -97,6 +97,10 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
   },
 
   render: function () {
+    // Render the outer container for resources
+    $(this.el).html(Handlebars.templates.main(this.model));
+
+    // Render a security view if applicable
     if (this.model.securityDefinitions) {
       for (var name in this.model.securityDefinitions) {
         var auth = this.model.securityDefinitions[name];
@@ -114,11 +118,7 @@ SwaggerUi.Views.MainView = Backbone.View.extend({
       }
     }
 
-    // Render the outer container for resources
-    $(this.el).html(Handlebars.templates.main(this.model));
-
     // Render each resource
-
     var resources = {};
     var counter = 0;
     for (var i = 0; i < this.model.apisArray.length; i++) {
