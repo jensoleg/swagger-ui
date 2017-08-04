@@ -1,0 +1,26 @@
+pipeline:
+  build:
+    image: plugins/docker
+    repo: registry.honestbee.com/swagger-ui:master
+    tags:
+      - ${DRONE_COMMIT_SHA:8}
+      - ${DRONE_COMMIT_BRANCH}
+
+  helm-deploy-staging:
+    image: quay.io/honestbee/drone-helm
+    skip_tls_verify: true
+    reuse_values: true
+    helm_repos: hb-charts=http://helm-charts.honestbee.com
+    chart: hb-charts/swagger-ui
+    values: image.repository=registry.honestbee.com/honestbee/swagger-ui,image.tag=${DRONE_COMMIT_SHA:0:8}
+    release: swagger-ui-master
+    prefix: PROD
+    when:
+      branch: [ master ]
+
+  notify:
+    image: plugins/slack
+    webhook: ${SLACK_WEBHOOK}
+    channel: feed-devops
+    when:
+      status: [ success, failure ]
