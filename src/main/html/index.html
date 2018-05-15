@@ -13,6 +13,7 @@
     <link href='css/standalone.css' rel='stylesheet'/>
     <link href='css/api-explorer.css' rel='stylesheet' type='text/css'/>
     <link href='css/screen.css' media='screen' rel='stylesheet' type='text/css'/>
+    <link href="css/sheerid.css" rel="stylesheet"/>
 
     <script src='lib/jquery-1.8.0.min.js' type='text/javascript'></script>
     <script src='lib/jquery.slideto.min.js' type='text/javascript'></script>
@@ -46,7 +47,7 @@
             if (url && url.length > 1) {
                 url = decodeURIComponent(url[1]);
             } else {
-                url = window.location.toString().replace(/\/*#?.*/, '/swagger.json');
+                url = window.location.toString().replace(/\/*#?.*/, 'swagger.json');
             }
 
             window.swaggerUi = new SwaggerUi({
@@ -101,8 +102,11 @@
              var apiKey = "myApiKeyXXXX123456789";
              $('#input_apiKey').val(apiKey);
              */
-
             window.swaggerUi.load();
+
+            $(window).bind('hashchange', function() {
+                window.Docs.shebang();
+            });
 
             function log() {
                 if ('console' in window) {
@@ -197,6 +201,26 @@
         $(function () {
             $("[data-toggle='tooltip']").tooltip();
         });
+    </script>
+
+    <!-- maintain height if embedded in iframe -->
+    <script type="text/javascript">
+        var bodyHeight = 0;
+        var sendHeight = function() {
+            if (bodyHeight == document.body.offsetHeight) {
+                return;
+            } else {
+                bodyHeight = document.body.offsetHeight;
+                parent.postMessage("updateHeight:" + bodyHeight, "*");
+            }
+        };
+        if (self != top) {
+            jQuery('body').change(sendHeight);
+            jQuery('body').click(sendHeight);
+            window.setTimeout(function(){
+                sendHeight();
+            }, 500);
+        }
     </script>
 
 </head>

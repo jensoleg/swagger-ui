@@ -95,12 +95,10 @@ window.Docs = {
       case 1:
         break;
       case 2:
-        var target = '#resources_nav [data-resource] [data-endpoint=' + fragments[0] + '_' + fragments[1] + ']',
-          n = $('#swagger_sidebar').find(target),
-          attr = n.attr('data-selected');
-
-        if (typeof attr == typeof undefined) {
-          n.trigger("click");
+        var id = fragments[0] + '_' + fragments[1];
+        var element = document.getElementById(id);
+        if (element !== undefined && element !== null) {
+          element.scrollIntoView();
         }
         break;
     }
