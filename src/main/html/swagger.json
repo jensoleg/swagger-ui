@@ -1,1055 +1,2075 @@
 {
-    "swagger": "2.0",
-    "info": {
-        "title": "Move your app forward with the Senodio IoT platform API",
-        "description": "Move your app forward with the Senodio API. The security and authorization api is provided by Auth0. For more information go to [Auth0 api documentation](https://auth0.com/docs/api). The authentication api is proxied through the Senodio server through the /authenticate path of the api server. The HTTP inteface to the MQTT message broker is an alternative to the raw MQTT api. You can explore the MQTT broker api at [ecs.mqtt.bobbytech.dk](http://ecs.mqtt.bobbytech.dk/)",
-        "version": "1.0.0",
-        "termsOfService": "http://senodio.dk/terms/",
-        "contact": {
-            "name": "api@senodio.dk"
-        },
-        "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-        }
-    },
-    "host": "ecs.api.bobbytech.dk",
-    "basePath": "/api",
-    "schemes": [
-        "http"
-    ],
-    "consumes": [
-        "application/json"
-    ],
-    "produces": [
-        "application/json"
-    ],
-    "paths": {
-        "/authenticate/oauth/ro": {
-            "post": {
-                "tags": [
-                    "Authentication"
-                ],
-                "summary": "Login to api server",
-                "description": "Login to api server",
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "Login",
-                        "description": "Login information",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Login"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response"
-                    }
-                }
-            }
-        },
-        "/auth/users": {
-            "get": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Get users",
-                "description": "Get users",
-                "responses": {
-                    "200": {
-                        "description": "Successful response"
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Get users",
-                "description": "Get users",
-                "responses": {
-                    "200": {
-                        "description": "Successful response"
-                    }
-                }
-            }
-        },
-        "/auth/users/{user_id}": {
-            "get": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Get a user",
-                "description": "Get a user",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "user_id",
-                        "description": "Id of user that needs to be fetched",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response"
-                    }
-                }
-            }
-        },
-        "/installations": {
-            "get": {
-                "tags": [
-                    "Installation"
-                ],
-                "summary": "Retrieve all installations",
-                "description": "Gets `Installation` objects.",
-                "produces": [
-                    "application/json"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "$ref": "#/definitions/Installation"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Installation"
-                ],
-                "summary": "Add an installation",
-                "description": "Add `Installation` object.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "Installation",
-                        "description": "Installation",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Installation"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "$ref": "#/definitions/Installation"
-                        }
-                    }
-                }
-            }
-        },
-        "/installations/{installationId}": {
-            "get": {
-                "tags": [
-                    "Installation"
-                ],
-                "summary": "Retrieve an installation",
-                "description": "Gets `Installation` objects.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "installationId",
-                        "description": "ID of installation that needs to be fetched",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "$ref": "#/definitions/Installation"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "Installation"
-                ],
-                "summary": "Update an installation",
-                "description": "Update `Installation` object.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "installationId",
-                        "description": "ID of installation that needs to be fetched",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "body",
-                        "name": "Installation",
-                        "description": "Installation",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Installation"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "$ref": "#/definitions/Installation"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "Installation"
-                ],
-                "summary": "Remove an installation",
-                "description": "Remove `Installation` object.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "installationId",
-                        "description": "ID of installation that needs to be fetched",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response"
-                    }
-                }
-            }
-        },
-        "/installations/{installationId}/devices": {
-            "post": {
-                "tags": [
-                    "Device"
-                ],
-                "summary": "Add a device to an installation",
-                "description": "Add a `Device` object.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "installationId",
-                        "description": "ID of installation",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "body",
-                        "name": "Device",
-                        "description": "Device object",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Device"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "$ref": "#/definitions/Device"
-                        }
-                    }
-                }
-            }
-        },
-        "/installations/{installationId}/devices/{deviceId}": {
-            "get": {
-                "tags": [
-                    "Device"
-                ],
-                "summary": "Retrieve a device",
-                "description": "Get `Device` object.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "installationId",
-                        "description": "ID of installation",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "deviceId",
-                        "description": "ID of device",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "$ref": "#/definitions/Device"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "Device"
-                ],
-                "summary": "Update a device configuration",
-                "description": "Update `Device` object.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "installationId",
-                        "description": "ID of installation",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "deviceId",
-                        "description": "ID of device",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "body",
-                        "name": "Device",
-                        "description": "Device object",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Device"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "$ref": "#/definitions/Device"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "Device"
-                ],
-                "summary": "Remove a device from an installation",
-                "description": "Delete `Device` object.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "installationId",
-                        "description": "ID of installation",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "deviceId",
-                        "description": "ID of device",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response"
-                    }
-                }
-            }
-        },
-        "/installations/{installationId}/devices/{deviceId}/controls": {
-            "post": {
-                "tags": [
-                    "Control/Sensor"
-                ],
-                "summary": "Add a control/sensor to a device",
-                "description": "Add a `Control` object to a 'Device' object.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "installationId",
-                        "description": "ID of installation",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "deviceId",
-                        "description": "ID of device",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "body",
-                        "name": "Control",
-                        "description": "Control object",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Control"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "$ref": "#/definitions/Control"
-                        }
-                    }
-                }
-            }
-        },
-        "/installations/{installationId}/devices/{deviceId}/controls/{controlId}": {
-            "get": {
-                "tags": [
-                    "Control/Sensor"
-                ],
-                "summary": "Retrieve a control/sensor",
-                "description": "Get `Control` object.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "installationId",
-                        "description": "ID of installation",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "deviceId",
-                        "description": "ID of device",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "controlId",
-                        "description": "ID of control",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "$ref": "#/definitions/Control"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "Control/Sensor"
-                ],
-                "summary": "Update a control/sensor configuration",
-                "description": "Update `Device` object.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "installationId",
-                        "description": "ID of installation",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "deviceId",
-                        "description": "Id of device",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "controlId",
-                        "description": "Id of control",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "body",
-                        "name": "Control",
-                        "description": "Control object",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Device"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "$ref": "#/definitions/Control"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "Control/Sensor"
-                ],
-                "summary": "Delete a control/sensor",
-                "description": "Delete `Control` object in Device",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "installationId",
-                        "description": "Id of installation",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "deviceId",
-                        "description": "Id of device",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "controlId",
-                        "description": "Id of control",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response"
-                    }
-                }
-            }
-        },
-        "/agent/{deviceId}": {
-            "delete": {
-                "tags": [
-                    "Device agent"
-                ],
-                "summary": "Deactivate device",
-                "description": "Deactive device",
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "installationId",
-                        "description": "Id of device",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "deviceId",
-                        "description": "Id of device",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response"
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Device agent"
-                ],
-                "summary": "Activate device",
-                "description": "Activate device with configuration query parameters.",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "config",
-                        "description": "Id of device",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "installationId",
-                        "description": "Id of installation",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "deviceID",
-                        "description": "Id of device",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "interval",
-                        "description": "Post interval for sensor data",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "deviceId",
-                        "description": "Id of device",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response"
-                    }
-                }
-            }
-        },
-        "/datastreams/{deviceId}/{controlId}": {
-            "get": {
-                "tags": [
-                    "Datastream"
-                ],
-                "summary": "Retrieve sensor data collection",
-                "description": "Retrieve sensor data collection",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "from",
-                        "description": "From date timestamp",
-                        "required": false,
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    {
-                        "in": "query",
-                        "name": "to",
-                        "description": "To date timestamp",
-                        "required": false,
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    {
-                        "in": "query",
-                        "name": "limit",
-                        "description": "Max number of observations",
-                        "required": false,
-                        "type": "integer"
-                    },
-                    {
-                        "in": "query",
-                        "name": "interval",
-                        "description": "Resolution of observations. 1 (seconds), 60 (minutes), 3600 (hours)",
-                        "required": false,
-                        "type": "integer"
-                    },
-                    {
-                        "in": "query",
-                        "name": "format",
-                        "description": "Format of response hash -> hash, timestamp -> [x,y], time -> [ms,y]",
-                        "required": false,
-                        "type": "integer"
-                    },
-                    {
-                        "in": "path",
-                        "name": "deviceId",
-                        "description": "Id of device",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "controlId",
-                        "description": "Id of sensor",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response"
-                    }
-                }
-            }
-        },
-        "/broker/{deviceId}/{controlId}": {
-            "post": {
-                "tags": [
-                    "Message broker"
-                ],
-                "summary": "Publish sensor data without retaining",
-                "description": "Publish sensor data without retaining",
-                "consumes": [
-                    "application/text"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "deviceId",
-                        "description": "Id of Device",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "controlId",
-                        "description": "Id of Control/Sensor",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "body",
-                        "name": "message",
-                        "description": "Message",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response"
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "Message broker"
-                ],
-                "summary": "Get latest published sensor data",
-                "description": "Get latest published sensor data",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "deviceId",
-                        "description": "Id of Device",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "controlId",
-                        "description": "Id of Control/Sensor",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response"
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "Message broker"
-                ],
-                "summary": "Publish and retain sensor value",
-                "description": "Publish and retain sensor value",
-                "consumes": [
-                    "application/text"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "deviceId",
-                        "description": "Id of Device",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "controlId",
-                        "description": "Id of Control/Sensor",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "body",
-                        "name": "message",
-                        "description": "Message",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response"
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "Message broker"
-                ],
-                "summary": "Reset sensor value",
-                "description": "Reset sensor value",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "deviceId",
-                        "description": "Id of Device",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "controlId",
-                        "description": "Id of Control/Sensor",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response"
-                    }
-                }
-            }
-        }
-    },
+    "basePath": "/rest/0.5",
     "definitions": {
-        "Installation": {
+        "Account": {
             "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "placement": {
-                    "type": "string"
-                },
-                "address": {
-                    "type": "string"
-                },
-                "contact": {
-                    "$ref": "#/definitions/Contact"
-                },
-                "devices": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Device"
-                    }
-                }
-            }
+                "accountId": {"type": "string"},
+                "company": {"type": "string"},
+                "firstName": {"type": "string"},
+                "lastName": {"type": "string"}
+            },
+            "type": "object"
         },
-        "Contact": {
-            "type": "object",
+        "Affiliation": {
             "properties": {
-                "name": {
+                "attributes": {
+                    "items": {"type": "string"},
+                    "type": "array"
+                },
+                "end": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "organizationId": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "organizationName": {"type": "string"},
+                "sourcePersonId": {"type": "string"},
+                "start": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "type": {
+                    "$ref": "#/definitions/AffiliationType",
+                    "enum": [
+                        "STUDENT_COLLEGE_BOUND",
+                        "STUDENT_FULL_TIME",
+                        "STUDENT_PART_TIME",
+                        "GRADUATE",
+                        "ALUMNUS",
+                        "FACULTY",
+                        "EMPLOYEE",
+                        "RESELLER",
+                        "NON_PROFIT",
+                        "ACTIVE_DUTY",
+                        "VETERAN",
+                        "RESERVIST",
+                        "MILITARY_FAMILY",
+                        "MILITARY_RETIREE",
+                        "DISABLED_VETERAN",
+                        "CIVILIAN_EMPLOYEE",
+                        "FIREFIGHTER",
+                        "POLICE",
+                        "EMT",
+                        "NURSE",
+                        "MEMBER",
+                        "CUSTOMER",
+                        "OWNER",
+                        "BUSINESS",
+                        "BUSINESS_CONTACT",
+                        "CONTRACTOR"
+                    ],
                     "type": "string"
                 },
-                "email": {
-                    "type": "string"
-                },
-                "phone": {
-                    "type": "string"
-                },
-                "website": {
-                    "type": "string"
+                "updated": {
+                    "format": "long",
+                    "type": "number"
                 }
-            }
+            },
+            "type": "object"
         },
-        "Device": {
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "placement": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "noOfAlarms": {
-                    "type": "integer"
-                },
-                "interval": {
-                    "type": "integer"
-                },
-                "controls": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Control"
-                    }
-                }
-            }
+        "AffiliationType": {
+            "enum": [
+                "ACTIVE_DUTY",
+                "ALUMNUS",
+                "BUSINESS",
+                "BUSINESS_CONTACT",
+                "CIVILIAN_EMPLOYEE",
+                "CONTRACTOR",
+                "CUSTOMER",
+                "DISABLED_VETERAN",
+                "EMPLOYEE",
+                "EMT",
+                "FACULTY",
+                "FIREFIGHTER",
+                "GRADUATE",
+                "MEMBER",
+                "MILITARY_FAMILY",
+                "MILITARY_RETIREE",
+                "NON_PROFIT",
+                "NURSE",
+                "OWNER",
+                "POLICE",
+                "RESELLER",
+                "RESERVIST",
+                "STUDENT_COLLEGE_BOUND",
+                "STUDENT_FULL_TIME",
+                "STUDENT_PART_TIME",
+                "VETERAN"
+            ],
+            "type": "string"
         },
-        "Control": {
+        "AmbiguousOrganizationVerificationError": {
             "properties": {
-                "id": {
+                "code": {
+                    "format": "integer",
+                    "type": "number"
+                },
+                "message": {"type": "string"},
+                "organizations": {
+                    "items": {"$ref": "#/definitions/Organization"},
+                    "type": "array"
+                },
+                "propertyName": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "Asset": {
+            "properties": {
+                "assetType": {
+                    "$ref": "#/definitions/AssetType",
+                    "enum": [
+                        "ID_CARD",
+                        "DATED_ID_CARD",
+                        "OFFICIAL_LETTER",
+                        "OTHER",
+                        "PAY_STUB",
+                        "ACCEPTANCE_LETTER",
+                        "CLASS_SCHEDULE",
+                        "TRANSCRIPT",
+                        "TUITION_RECEIPT",
+                        "REGISTRATION_RECEIPT",
+                        "INSURANCE_CARD",
+                        "DD214",
+                        "IRS_SCHEDULE_G_FORM_1120",
+                        "IRS_SCHEDULE_K1_FORM_1120S",
+                        "IRS_SCHEDULE_K1_FORM_1065",
+                        "IRS_SCHEDULE_C_OR_CEZ_PAGE_1",
+                        "IRS_SCHEDULE_B1_FORM_1065",
+                        "REPORT_CARD",
+                        "DBA_REGISTRATION",
+                        "BUSINESS_TAX_FORM_PAGE1",
+                        "ARTICLES_OF_INCORPORATION",
+                        "SECRETARY_OF_STATE_FILING",
+                        "VENDOR_STATEMENT",
+                        "LEASE_AGREEMENT",
+                        "LETTER_OF_AUTHORIZATION",
+                        "POWER_OF_ATTORNEY"
+                    ],
                     "type": "string"
                 },
-                "name": {
-                    "type": "string"
+                "assetTypeDescription": {"type": "string"},
+                "comments": {
+                    "items": {"$ref": "#/definitions/Comment"},
+                    "type": "array"
                 },
-                "isState": {
+                "created": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "errors": {
+                    "items": {"$ref": "#/definitions/Error"},
+                    "type": "array"
+                },
+                "expires": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "id": {"type": "string"},
+                "issued": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "name": {"type": "string"},
+                "purged": {
+                    "enum": [
+                        "true",
+                        "false",
+                        "null"
+                    ],
                     "type": "boolean"
                 },
-                "metadata": {
+                "reviewer": {"type": "string"},
+                "size": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "status": {
+                    "$ref": "#/definitions/AssetStatus",
+                    "enum": [
+                        "ACCEPTED",
+                        "PENDING_REVIEW",
+                        "REJECTED"
+                    ],
                     "type": "string"
                 },
-                "ctrlType": {
-                    "type": "string"
-                },
-                "minValue": {
-                    "type": "integer"
-                },
-                "maxValue": {
-                    "type": "integer"
-                },
-                "minCritical": {
-                    "type": "integer"
-                },
-                "maxCritical": {
-                    "type": "integer"
-                },
-                "scale": {
-                    "type": "integer"
-                },
-                "timers": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Timer"
-                    }
-                },
-                "unit": {
-                    "$ref": "#/definitions/Unit"
-                }
-            }
+                "type": {"type": "string"}
+            },
+            "type": "object"
         },
-        "Unit": {
-            "properties": {
-                "symbol": {
-                    "type": "string"
-                },
-                "units": {
-                    "type": "string"
-                },
-                "precision": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
+        "AssetStatus": {
+            "enum": [
+                "ACCEPTED",
+                "PENDING_REVIEW",
+                "REJECTED"
+            ],
+            "type": "string"
         },
-        "Timer": {
+        "AssetType": {
+            "enum": [
+                "ACCEPTANCE_LETTER",
+                "ARTICLES_OF_INCORPORATION",
+                "BUSINESS_TAX_FORM_PAGE1",
+                "CLASS_SCHEDULE",
+                "DATED_ID_CARD",
+                "DBA_REGISTRATION",
+                "DD214",
+                "ID_CARD",
+                "INSURANCE_CARD",
+                "IRS_SCHEDULE_B1_FORM_1065",
+                "IRS_SCHEDULE_C_OR_CEZ_PAGE_1",
+                "IRS_SCHEDULE_G_FORM_1120",
+                "IRS_SCHEDULE_K1_FORM_1065",
+                "IRS_SCHEDULE_K1_FORM_1120S",
+                "LEASE_AGREEMENT",
+                "LETTER_OF_AUTHORIZATION",
+                "OFFICIAL_LETTER",
+                "OTHER",
+                "PAY_STUB",
+                "POWER_OF_ATTORNEY",
+                "REGISTRATION_RECEIPT",
+                "REPORT_CARD",
+                "SECRETARY_OF_STATE_FILING",
+                "TRANSCRIPT",
+                "TUITION_RECEIPT",
+                "VENDOR_STATEMENT"
+            ],
+            "type": "string"
+        },
+        "Attribute": {
+            "description": "placeholder",
+            "properties": {},
+            "type": "object"
+        },
+        "AuthorizedVerificationRequest": {
             "properties": {
-                "name": {
-                    "type": "string"
+                "expires": {
+                    "format": "long",
+                    "type": "number"
                 },
-                "enabled": {
+                "fields": {
+                    "items": {"$ref": "#/definitions/Field"},
+                    "type": "array"
+                },
+                "id": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "BulkCertificationTask": {
+            "properties": {
+                "bulkAllBatchRecordsProcessed": {
+                    "enum": [
+                        "true",
+                        "false",
+                        "null"
+                    ],
                     "type": "boolean"
                 },
-                "time": {
+                "bulkBatchId": {"type": "string"},
+                "bulkBatchRecordCount": {
+                    "format": "integer",
+                    "type": "number"
+                },
+                "bulkBatchRecordsProcessed": {
+                    "format": "integer",
+                    "type": "number"
+                },
+                "bulkErrors": {
+                    "items": {"type": "object"},
+                    "type": "array"
+                },
+                "bulkTaskStatus": {"type": "string"},
+                "created": {"type": "string"},
+                "type": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "CertificationPropertyError": {
+            "properties": {
+                "code": {
+                    "format": "integer",
+                    "type": "number"
+                },
+                "message": {"type": "string"},
+                "propertyName": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "CertificationRequest": {
+            "properties": {
+                "attribute": {
+                    "$ref": "#/definitions/Attribute",
+                    "type": "string"
+                },
+                "config": {
+                    "$ref": "#/definitions/CertificationRequestConfig",
+                    "type": "string"
+                },
+                "metadata": {"type": "string"},
+                "timestamp": {
+                    "format": "long",
+                    "type": "number"
+                }
+            },
+            "type": "object"
+        },
+        "CertificationRequestConfig": {
+            "properties": {
+                "consolationRewardIds": {
+                    "items": {"type": "string"},
+                    "type": "array"
+                },
+                "metadata": {"type": "string"},
+                "rewardIds": {
+                    "items": {"type": "string"},
+                    "type": "array"
+                }
+            },
+            "type": "object"
+        },
+        "CertificationResponse": {
+            "properties": {
+                "errors": {
+                    "items": {"$ref": "#/definitions/Error"},
+                    "type": "array"
+                },
+                "metadata": {"type": "string"},
+                "request": {
+                    "$ref": "#/definitions/CertificationRequest",
+                    "type": "string"
+                },
+                "requestId": {"type": "string"},
+                "result": {
+                    "enum": [
+                        "true",
+                        "false",
+                        "null"
+                    ],
+                    "type": "boolean"
+                },
+                "status": {
+                    "$ref": "#/definitions/VerificationStatus",
+                    "enum": [
+                        "NEW",
+                        "OPEN",
+                        "PENDING",
+                        "COMPLETE"
+                    ],
                     "type": "string"
                 },
                 "timestamp": {
-                    "type": "integer"
-                },
-                "duration": {
-                    "type": "integer"
+                    "format": "long",
+                    "type": "number"
                 }
-            }
+            },
+            "type": "object"
         },
-        "Login": {
+        "ChallengeQuestion": {
             "properties": {
-                "client_id": {
-                    "type": "string",
-                    "default": "kpWrEQ5gJclwuAljKpHgNcJA3NwNZ0FL"
+                "choices": {
+                    "items": {"type": "string"},
+                    "type": "array"
                 },
-                "username": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "connection": {
-                    "type": "string",
-                    "default": "Username-Password-Authentication"
-                },
-                "grant_type": {
-                    "type": "string",
-                    "format": "password",
-                    "default": "password"
-                },
-                "scope": {
-                    "type": "string",
-                    "default": "openid"
+                "id": {"type": "string"},
+                "questionText": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "ChallengeQuestionSet": {
+            "properties": {
+                "id": {"type": "string"},
+                "questions": {
+                    "items": {"$ref": "#/definitions/ChallengeQuestion"},
+                    "type": "array"
                 }
+            },
+            "type": "object"
+        },
+        "Comment": {
+            "properties": {
+                "created": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "text": {"type": "string"},
+                "userId": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "ConfigurationEntry": {
+            "properties": {
+                "key": {"type": "string"},
+                "value": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "Coupon": {
+            "properties": {
+                "id": {"type": "string"},
+                "state": {
+                    "$ref": "#/definitions/TokenState",
+                    "enum": [
+                        "ACTIVE",
+                        "EXPIRED",
+                        "USED"
+                    ],
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "Dataset": {
+            "properties": {
+                "affiliationType": {
+                    "$ref": "#/definitions/AffiliationType",
+                    "enum": [
+                        "STUDENT_COLLEGE_BOUND",
+                        "STUDENT_FULL_TIME",
+                        "STUDENT_PART_TIME",
+                        "GRADUATE",
+                        "ALUMNUS",
+                        "FACULTY",
+                        "EMPLOYEE",
+                        "RESELLER",
+                        "NON_PROFIT",
+                        "ACTIVE_DUTY",
+                        "VETERAN",
+                        "RESERVIST",
+                        "MILITARY_FAMILY",
+                        "MILITARY_RETIREE",
+                        "DISABLED_VETERAN",
+                        "CIVILIAN_EMPLOYEE",
+                        "FIREFIGHTER",
+                        "POLICE",
+                        "EMT",
+                        "NURSE",
+                        "MEMBER",
+                        "CUSTOMER",
+                        "OWNER",
+                        "BUSINESS",
+                        "BUSINESS_CONTACT",
+                        "CONTRACTOR"
+                    ],
+                    "type": "string"
+                },
+                "fields": {
+                    "items": {"type": "string"},
+                    "type": "array"
+                },
+                "id": {"type": "string"},
+                "name": {"type": "string"},
+                "orgParameters": {
+                    "items": {"type": "string"},
+                    "type": "array"
+                },
+                "organization": {
+                    "$ref": "#/definitions/Organization",
+                    "type": "string"
+                },
+                "updated": {
+                    "format": "long",
+                    "type": "number"
+                }
+            },
+            "type": "object"
+        },
+        "DatasetEntry": {
+            "properties": {
+                "affiliationType": {
+                    "$ref": "#/definitions/AffiliationType",
+                    "enum": [
+                        "STUDENT_COLLEGE_BOUND",
+                        "STUDENT_FULL_TIME",
+                        "STUDENT_PART_TIME",
+                        "GRADUATE",
+                        "ALUMNUS",
+                        "FACULTY",
+                        "EMPLOYEE",
+                        "RESELLER",
+                        "NON_PROFIT",
+                        "ACTIVE_DUTY",
+                        "VETERAN",
+                        "RESERVIST",
+                        "MILITARY_FAMILY",
+                        "MILITARY_RETIREE",
+                        "DISABLED_VETERAN",
+                        "CIVILIAN_EMPLOYEE",
+                        "FIREFIGHTER",
+                        "POLICE",
+                        "EMT",
+                        "NURSE",
+                        "MEMBER",
+                        "CUSTOMER",
+                        "OWNER",
+                        "BUSINESS",
+                        "BUSINESS_CONTACT",
+                        "CONTRACTOR"
+                    ],
+                    "type": "string"
+                },
+                "expirationDate": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "id": {"type": "string"},
+                "metadata": {"type": "string"},
+                "organizationId": {
+                    "format": "long",
+                    "type": "number"
+                }
+            },
+            "type": "object"
+        },
+        "DatasetWithStats": {
+            "properties": {
+                "affiliationType": {
+                    "$ref": "#/definitions/AffiliationType",
+                    "enum": [
+                        "STUDENT_COLLEGE_BOUND",
+                        "STUDENT_FULL_TIME",
+                        "STUDENT_PART_TIME",
+                        "GRADUATE",
+                        "ALUMNUS",
+                        "FACULTY",
+                        "EMPLOYEE",
+                        "RESELLER",
+                        "NON_PROFIT",
+                        "ACTIVE_DUTY",
+                        "VETERAN",
+                        "RESERVIST",
+                        "MILITARY_FAMILY",
+                        "MILITARY_RETIREE",
+                        "DISABLED_VETERAN",
+                        "CIVILIAN_EMPLOYEE",
+                        "FIREFIGHTER",
+                        "POLICE",
+                        "EMT",
+                        "NURSE",
+                        "MEMBER",
+                        "CUSTOMER",
+                        "OWNER",
+                        "BUSINESS",
+                        "BUSINESS_CONTACT",
+                        "CONTRACTOR"
+                    ],
+                    "type": "string"
+                },
+                "entryCount": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "fields": {
+                    "items": {"type": "string"},
+                    "type": "array"
+                },
+                "id": {"type": "string"},
+                "name": {"type": "string"},
+                "orgParameters": {
+                    "items": {"type": "string"},
+                    "type": "array"
+                },
+                "organization": {
+                    "$ref": "#/definitions/Organization",
+                    "type": "string"
+                },
+                "updated": {
+                    "format": "long",
+                    "type": "number"
+                }
+            },
+            "type": "object"
+        },
+        "Error": {
+            "properties": {
+                "code": {
+                    "format": "integer",
+                    "type": "number"
+                },
+                "message": {"type": "string"},
+                "propertyName": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "EventType": {
+            "enum": [
+                "ASYNCHRONOUS_UPDATE",
+                "CREATE",
+                "DATA_EXPIRATION",
+                "DEACTIVATE",
+                "SYNCHRONOUS_UPDATE"
+            ],
+            "type": "string"
+        },
+        "ExpiringToken": {
+            "properties": {
+                "expires": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "token": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "Field": {
+            "properties": {
+                "name": {"type": "string"},
+                "required": {"type": "boolean"}
+            },
+            "type": "object"
+        },
+        "FieldConfig": {
+            "properties": {
+                "defaultValue": {"type": "string"},
+                "editable": {"type": "boolean"},
+                "multiple": {"type": "boolean"},
+                "name": {"type": "string"},
+                "pattern": {"type": "string"},
+                "required": {"type": "boolean"},
+                "type": {"type": "string"},
+                "value": {"type": "string"},
+                "values": {
+                    "items": {"type": "string"},
+                    "type": "array"
+                }
+            },
+            "type": "object"
+        },
+        "FieldNumberRange": {
+            "properties": {
+                "name": {"type": "string"},
+                "required": {"type": "boolean"},
+                "type": {"type": "string"},
+                "values": {
+                    "$ref": "#/definitions/Range",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "FieldText": {
+            "properties": {
+                "name": {"type": "string"},
+                "pattern": {"type": "string"},
+                "required": {"type": "boolean"}
+            },
+            "type": "object"
+        },
+        "FieldType": {
+            "properties": {
+                "name": {"type": "string"},
+                "required": {"type": "boolean"},
+                "type": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "FieldValidator": {
+            "properties": {
+                "name": {"type": "string"},
+                "required": {"type": "boolean"}
+            },
+            "type": "object"
+        },
+        "Locale": {
+            "description": "placeholder",
+            "properties": {},
+            "type": "object"
+        },
+        "Namespace": {
+            "properties": {
+                "name": {"type": "string"},
+                "templateId": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "Notification": {
+            "properties": {
+                "eventType": {
+                    "$ref": "#/definitions/EventType",
+                    "enum": [
+                        "CREATE",
+                        "SYNCHRONOUS_UPDATE",
+                        "ASYNCHRONOUS_UPDATE",
+                        "DEACTIVATE",
+                        "DATA_EXPIRATION"
+                    ],
+                    "type": "string"
+                },
+                "notifierId": {"type": "string"},
+                "notifierType": {
+                    "$ref": "#/definitions/NotifierType",
+                    "enum": [
+                        "EMAIL",
+                        "HTTP",
+                        "SYSTEM_OUT",
+                        "NEXTERNAL"
+                    ],
+                    "type": "string"
+                },
+                "requestId": {"type": "string"},
+                "responseId": {"type": "string"},
+                "success": {"type": "boolean"},
+                "timestamp": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "verificationResponseResultCode": {
+                    "$ref": "#/definitions/VerificationResponseResultCode",
+                    "enum": [
+                        "DISAPPROVED",
+                        "APPROVED",
+                        "VERIFICATION_SOURCE_UNAVAILABLE",
+                        "INSUFFICIENT_DATA",
+                        "EXPIRED",
+                        "REVOKED",
+                        "NOT_APPROVED",
+                        "INCONCLUSIVE"
+                    ],
+                    "type": "string"
+                },
+                "verificationStatus": {
+                    "$ref": "#/definitions/VerificationStatus",
+                    "enum": [
+                        "NEW",
+                        "OPEN",
+                        "PENDING",
+                        "COMPLETE"
+                    ],
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "NotificationEmail": {
+            "properties": {
+                "address": {"type": "string"},
+                "eventType": {
+                    "$ref": "#/definitions/EventType",
+                    "enum": [
+                        "CREATE",
+                        "SYNCHRONOUS_UPDATE",
+                        "ASYNCHRONOUS_UPDATE",
+                        "DEACTIVATE",
+                        "DATA_EXPIRATION"
+                    ],
+                    "type": "string"
+                },
+                "notifierId": {"type": "string"},
+                "notifierType": {
+                    "$ref": "#/definitions/NotifierType",
+                    "enum": [
+                        "EMAIL",
+                        "HTTP",
+                        "SYSTEM_OUT",
+                        "NEXTERNAL"
+                    ],
+                    "type": "string"
+                },
+                "requestId": {"type": "string"},
+                "responseId": {"type": "string"},
+                "subject": {"type": "string"},
+                "success": {"type": "boolean"},
+                "timestamp": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "verificationResponseResultCode": {
+                    "$ref": "#/definitions/VerificationResponseResultCode",
+                    "enum": [
+                        "DISAPPROVED",
+                        "APPROVED",
+                        "VERIFICATION_SOURCE_UNAVAILABLE",
+                        "INSUFFICIENT_DATA",
+                        "EXPIRED",
+                        "REVOKED",
+                        "NOT_APPROVED",
+                        "INCONCLUSIVE"
+                    ],
+                    "type": "string"
+                },
+                "verificationStatus": {
+                    "$ref": "#/definitions/VerificationStatus",
+                    "enum": [
+                        "NEW",
+                        "OPEN",
+                        "PENDING",
+                        "COMPLETE"
+                    ],
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "NotificationHttp": {
+            "properties": {
+                "eventType": {
+                    "$ref": "#/definitions/EventType",
+                    "enum": [
+                        "CREATE",
+                        "SYNCHRONOUS_UPDATE",
+                        "ASYNCHRONOUS_UPDATE",
+                        "DEACTIVATE",
+                        "DATA_EXPIRATION"
+                    ],
+                    "type": "string"
+                },
+                "notifierId": {"type": "string"},
+                "notifierType": {
+                    "$ref": "#/definitions/NotifierType",
+                    "enum": [
+                        "EMAIL",
+                        "HTTP",
+                        "SYSTEM_OUT",
+                        "NEXTERNAL"
+                    ],
+                    "type": "string"
+                },
+                "requestId": {"type": "string"},
+                "responseId": {"type": "string"},
+                "statusCode": {
+                    "format": "integer",
+                    "type": "number"
+                },
+                "success": {"type": "boolean"},
+                "timestamp": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "url": {"type": "string"},
+                "verificationResponseResultCode": {
+                    "$ref": "#/definitions/VerificationResponseResultCode",
+                    "enum": [
+                        "DISAPPROVED",
+                        "APPROVED",
+                        "VERIFICATION_SOURCE_UNAVAILABLE",
+                        "INSUFFICIENT_DATA",
+                        "EXPIRED",
+                        "REVOKED",
+                        "NOT_APPROVED",
+                        "INCONCLUSIVE"
+                    ],
+                    "type": "string"
+                },
+                "verificationStatus": {
+                    "$ref": "#/definitions/VerificationStatus",
+                    "enum": [
+                        "NEW",
+                        "OPEN",
+                        "PENDING",
+                        "COMPLETE"
+                    ],
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "Notifier": {
+            "properties": {
+                "config": {"type": "string"},
+                "filters": {
+                    "items": {"$ref": "#/definitions/NotifierFilter"},
+                    "type": "array"
+                },
+                "id": {"type": "string"},
+                "tags": {
+                    "items": {"type": "string"},
+                    "type": "array"
+                },
+                "type": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "NotifierFilter": {
+            "properties": {
+                "eventType": {
+                    "$ref": "#/definitions/EventType",
+                    "enum": [
+                        "CREATE",
+                        "SYNCHRONOUS_UPDATE",
+                        "ASYNCHRONOUS_UPDATE",
+                        "DEACTIVATE",
+                        "DATA_EXPIRATION"
+                    ],
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/VerificationResult",
+                    "enum": [
+                        "TRUE",
+                        "FALSE",
+                        "UNKNOWN"
+                    ],
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/VerificationStatus",
+                    "enum": [
+                        "NEW",
+                        "OPEN",
+                        "PENDING",
+                        "COMPLETE"
+                    ],
+                    "type": "string"
+                },
+                "templateId": {"type": "string"},
+                "tier": {
+                    "format": "integer",
+                    "type": "number"
+                },
+                "verificationType": {
+                    "$ref": "#/definitions/VerificationType",
+                    "enum": [
+                        "HONOR_SYSTEM",
+                        "VALIDATION",
+                        "IP_ADDRESS",
+                        "EMAIL_LOOP",
+                        "AUTHORITATIVE",
+                        "SSO",
+                        "ASSET_REVIEW"
+                    ],
+                    "type": "string"
+                },
+                "verificationTypeOfRecord": {
+                    "$ref": "#/definitions/VerificationType",
+                    "enum": [
+                        "HONOR_SYSTEM",
+                        "VALIDATION",
+                        "IP_ADDRESS",
+                        "EMAIL_LOOP",
+                        "AUTHORITATIVE",
+                        "SSO",
+                        "ASSET_REVIEW"
+                    ],
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "NotifierType": {
+            "enum": [
+                "EMAIL",
+                "HTTP"
+            ],
+            "type": "string"
+        },
+        "Organization": {
+            "properties": {
+                "accountId": {"type": "string"},
+                "active": {"type": "boolean"},
+                "aliases": {
+                    "items": {"type": "string"},
+                    "type": "array"
+                },
+                "city": {"type": "string"},
+                "country": {"type": "string"},
+                "emailDomains": {
+                    "items": {"type": "string"},
+                    "type": "array"
+                },
+                "id": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "ips": {
+                    "items": {"type": "string"},
+                    "type": "array"
+                },
+                "name": {"type": "string"},
+                "state": {"type": "string"},
+                "street": {"type": "string"},
+                "tags": {
+                    "items": {"type": "string"},
+                    "type": "array"
+                },
+                "type": {
+                    "$ref": "#/definitions/OrganizationType",
+                    "enum": [
+                        "UNIVERSITY",
+                        "MEMBERSHIP",
+                        "MILITARY",
+                        "FIRST_RESPONDER",
+                        "MEDICAL",
+                        "NON_PROFIT",
+                        "CORPORATE",
+                        "K12"
+                    ],
+                    "type": "string"
+                },
+                "zip": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "OrganizationParameter": {
+            "enum": [
+                "aliases",
+                "city",
+                "countryCode",
+                "emailDomains",
+                "id",
+                "ips",
+                "lenientNameMatch",
+                "matchName",
+                "name",
+                "phone",
+                "source",
+                "stateCode",
+                "street",
+                "street2",
+                "tags",
+                "type",
+                "zip"
+            ],
+            "type": "string"
+        },
+        "OrganizationType": {
+            "enum": [
+                "CORPORATE",
+                "FIRST_RESPONDER",
+                "K12",
+                "MEDICAL",
+                "MEMBERSHIP",
+                "MILITARY",
+                "NON_PROFIT",
+                "UNIVERSITY"
+            ],
+            "type": "string"
+        },
+        "Person": {
+            "properties": {"fields": {"type": "string"}},
+            "type": "object"
+        },
+        "PersonFieldAccessor": {
+            "description": "placeholder",
+            "properties": {},
+            "type": "object"
+        },
+        "Range": {
+            "properties": {
+                "max": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "min": {
+                    "format": "long",
+                    "type": "number"
+                }
+            },
+            "type": "object"
+        },
+        "ReferenceToken": {
+            "properties": {
+                "expires": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "reference": {"type": "string"},
+                "token": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "Report": {
+            "properties": {
+                "id": {"type": "string"},
+                "requestTimestamp": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "status": {
+                    "$ref": "#/definitions/ReportStatus",
+                    "enum": [
+                        "CREATED",
+                        "REPORTING",
+                        "COMPLETE",
+                        "ERROR"
+                    ],
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "ReportBreakdown": {
+            "properties": {
+                "accountId": {"type": "string"},
+                "count": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "date": {"type": "string"},
+                "error": {"type": "string"},
+                "organizationType": {"type": "string"},
+                "result": {"type": "string"},
+                "verificationType": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "ReportStatus": {
+            "enum": [
+                "COMPLETE",
+                "CREATED",
+                "ERROR",
+                "REPORTING"
+            ],
+            "type": "string"
+        },
+        "ResultWrapper": {
+            "properties": {"result": {"type": "boolean"}},
+            "type": "object"
+        },
+        "Reward": {
+            "properties": {
+                "data": {"type": "string"},
+                "id": {"type": "string"},
+                "name": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "RewardPool": {
+            "properties": {
+                "id": {"type": "string"},
+                "name": {"type": "string"},
+                "warnThreshold": {
+                    "format": "integer",
+                    "type": "number"
+                }
+            },
+            "type": "object"
+        },
+        "RewardPoolEntryResult": {
+            "properties": {"entriesAdded": {
+                "format": "integer",
+                "type": "number"
+            }},
+            "type": "object"
+        },
+        "RewardPoolWithStats": {
+            "properties": {
+                "id": {"type": "string"},
+                "name": {"type": "string"},
+                "remainingEntries": {
+                    "format": "integer",
+                    "type": "number"
+                },
+                "totalEntries": {
+                    "format": "integer",
+                    "type": "number"
+                },
+                "warnThreshold": {
+                    "format": "integer",
+                    "type": "number"
+                }
+            },
+            "type": "object"
+        },
+        "SearchResult": {
+            "properties": {
+                "results": {
+                    "items": {"type": "object"},
+                    "type": "array"
+                },
+                "totalCount": {
+                    "format": "integer",
+                    "type": "number"
+                }
+            },
+            "type": "object"
+        },
+        "Statement": {
+            "properties": {
+                "fieldType": {"type": "string"},
+                "id": {"type": "string"},
+                "label": {"type": "string"},
+                "operator": {"type": "string"},
+                "value": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "Symbology": {
+            "enum": [
+                "CODE_128",
+                "ITF",
+                "PDF417",
+                "QR",
+                "UPC_A"
+            ],
+            "type": "string"
+        },
+        "TaskStatus": {
+            "enum": [
+                "COMPLETED",
+                "ESCALATED",
+                "IN_PROGRESS",
+                "ON_HOLD",
+                "PENDING"
+            ],
+            "type": "string"
+        },
+        "ThinOrganization": {
+            "properties": {
+                "id": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "name": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "ThinOrganizationWithLocation": {
+            "properties": {
+                "city": {"type": "string"},
+                "id": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "name": {"type": "string"},
+                "state": {"type": "string"},
+                "zip": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "Token": {
+            "properties": {"token": {"type": "string"}},
+            "type": "object"
+        },
+        "TokenState": {
+            "enum": [
+                "ACTIVE",
+                "EXPIRED",
+                "USED"
+            ],
+            "type": "string"
+        },
+        "URLReference": {
+            "properties": {
+                "name": {"type": "string"},
+                "url": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "User": {
+            "properties": {
+                "accountId": {"type": "string"},
+                "email": {"type": "string"},
+                "firstName": {"type": "string"},
+                "friendlyName": {"type": "string"},
+                "id": {"type": "string"},
+                "lastName": {"type": "string"},
+                "roles": {
+                    "enum": [
+                        "ACCOUNT_OWNER",
+                        "CONFIGURATION_ADMIN",
+                        "DEVELOPER",
+                        "MICROCENTER_ADMIN",
+                        "PRODUCTION_USER",
+                        "PUPPET_MASTER",
+                        "PUPPET",
+                        "PURGER",
+                        "REPORTER",
+                        "RESOURCE_MANAGER",
+                        "REST_USER",
+                        "REVIEWER",
+                        "REVIEWER_ADMIN",
+                        "REVIEWER_MANAGER",
+                        "REVIEW_REPORTER",
+                        "REWARD_ADMIN",
+                        "STAFF_REVIEW_REPORTER",
+                        "STAFF",
+                        "TEMPLATE_ADMIN",
+                        "USER",
+                        "USER_ADMIN",
+                        "BULK_VERIFIER",
+                        "PERSON_DATA",
+                        "MSHUP",
+                        "ORGANIZATION_MANAGER",
+                        "PROMOTION_MANAGER",
+                        "CUSTOMER_SERVICE",
+                        "TRIAL_USER"
+                    ],
+                    "items": {"$ref": "#/definitions/UserRole"},
+                    "type": "array"
+                },
+                "username": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "UserRole": {
+            "enum": [
+                "CUSTOMER_SERVICE",
+                "ORGANIZATION_MANAGER",
+                "PROMOTION_MANAGER",
+                "REPORTER",
+                "RESOURCE_MANAGER",
+                "REVIEWER",
+                "REVIEWER_MANAGER",
+                "REVIEW_REPORTER",
+                "REWARD_ADMIN",
+                "TEMPLATE_ADMIN",
+                "USER_ADMIN"
+            ],
+            "type": "string"
+        },
+        "VerificationError": {
+            "description": "placeholder",
+            "properties": {},
+            "type": "object"
+        },
+        "VerificationRequest": {
+            "properties": {
+                "active": {
+                    "enum": [
+                        "true",
+                        "false",
+                        "null"
+                    ],
+                    "type": "boolean"
+                },
+                "assetMap": {"type": "string"},
+                "config": {
+                    "$ref": "#/definitions/VerificationRequestConfig",
+                    "type": "string"
+                },
+                "expirationDate": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "metadata": {"type": "string"},
+                "organization": {
+                    "$ref": "#/definitions/Organization",
+                    "type": "string"
+                },
+                "personId": {"type": "string"},
+                "revisions": {
+                    "format": "integer",
+                    "type": "number"
+                },
+                "timestamp": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "userId": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "VerificationRequestConfig": {
+            "properties": {
+                "affiliationTypes": {
+                    "enum": [
+                        "STUDENT_COLLEGE_BOUND",
+                        "STUDENT_FULL_TIME",
+                        "STUDENT_PART_TIME",
+                        "GRADUATE",
+                        "ALUMNUS",
+                        "FACULTY",
+                        "EMPLOYEE",
+                        "RESELLER",
+                        "NON_PROFIT",
+                        "ACTIVE_DUTY",
+                        "VETERAN",
+                        "RESERVIST",
+                        "MILITARY_FAMILY",
+                        "MILITARY_RETIREE",
+                        "DISABLED_VETERAN",
+                        "CIVILIAN_EMPLOYEE",
+                        "FIREFIGHTER",
+                        "POLICE",
+                        "EMT",
+                        "NURSE",
+                        "MEMBER",
+                        "CUSTOMER",
+                        "OWNER",
+                        "BUSINESS",
+                        "BUSINESS_CONTACT",
+                        "CONTRACTOR"
+                    ],
+                    "items": {"$ref": "#/definitions/AffiliationType"},
+                    "type": "array"
+                },
+                "assetTypes": {
+                    "enum": [
+                        "ID_CARD",
+                        "DATED_ID_CARD",
+                        "OFFICIAL_LETTER",
+                        "OTHER",
+                        "PAY_STUB",
+                        "ACCEPTANCE_LETTER",
+                        "CLASS_SCHEDULE",
+                        "TRANSCRIPT",
+                        "TUITION_RECEIPT",
+                        "REGISTRATION_RECEIPT",
+                        "INSURANCE_CARD",
+                        "DD214",
+                        "IRS_SCHEDULE_G_FORM_1120",
+                        "IRS_SCHEDULE_K1_FORM_1120S",
+                        "IRS_SCHEDULE_K1_FORM_1065",
+                        "IRS_SCHEDULE_C_OR_CEZ_PAGE_1",
+                        "IRS_SCHEDULE_B1_FORM_1065",
+                        "REPORT_CARD",
+                        "DBA_REGISTRATION",
+                        "BUSINESS_TAX_FORM_PAGE1",
+                        "ARTICLES_OF_INCORPORATION",
+                        "SECRETARY_OF_STATE_FILING",
+                        "VENDOR_STATEMENT",
+                        "LEASE_AGREEMENT",
+                        "LETTER_OF_AUTHORIZATION",
+                        "POWER_OF_ATTORNEY"
+                    ],
+                    "items": {"$ref": "#/definitions/AssetType"},
+                    "type": "array"
+                },
+                "consolationRewardIds": {
+                    "items": {"type": "string"},
+                    "type": "array"
+                },
+                "locale": {
+                    "$ref": "#/definitions/Locale",
+                    "type": "string"
+                },
+                "metadata": {
+                    "description": "Shim to return VerificationModel logic name in metadata when overridden so that it does not get reverted on template update",
+                    "type": "string"
+                },
+                "notifierIds": {
+                    "items": {"type": "string"},
+                    "type": "array"
+                },
+                "rewardIds": {
+                    "items": {"type": "string"},
+                    "type": "array"
+                },
+                "verificationTypes": {
+                    "enum": [
+                        "HONOR_SYSTEM",
+                        "VALIDATION",
+                        "IP_ADDRESS",
+                        "EMAIL_LOOP",
+                        "AUTHORITATIVE",
+                        "SSO",
+                        "ASSET_REVIEW"
+                    ],
+                    "items": {"$ref": "#/definitions/VerificationType"},
+                    "type": "array"
+                }
+            },
+            "type": "object"
+        },
+        "VerificationRequestTemplate": {
+            "properties": {
+                "active": {"type": "boolean"},
+                "begins": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "config": {
+                    "$ref": "#/definitions/VerificationRequestConfig",
+                    "type": "string"
+                },
+                "created": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "expires": {
+                    "format": "long",
+                    "type": "number"
+                },
+                "id": {"type": "string"},
+                "metadata": {"type": "string"},
+                "name": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "VerificationResponse": {
+            "properties": {
+                "affiliations": {
+                    "items": {"$ref": "#/definitions/Affiliation"},
+                    "type": "array"
+                },
+                "errors": {
+                    "items": {"$ref": "#/definitions/Error"},
+                    "type": "array"
+                },
+                "inactiveAffiliations": {
+                    "items": {"$ref": "#/definitions/Affiliation"},
+                    "type": "array"
+                },
+                "metadata": {"type": "string"},
+                "request": {
+                    "$ref": "#/definitions/VerificationRequest",
+                    "type": "string"
+                },
+                "requestId": {"type": "string"},
+                "result": {
+                    "enum": [
+                        "true",
+                        "false",
+                        "null"
+                    ],
+                    "type": "boolean"
+                },
+                "status": {
+                    "$ref": "#/definitions/VerificationStatus",
+                    "enum": [
+                        "NEW",
+                        "OPEN",
+                        "PENDING",
+                        "COMPLETE"
+                    ],
+                    "type": "string"
+                },
+                "timestamp": {
+                    "format": "long",
+                    "type": "number"
+                }
+            },
+            "type": "object"
+        },
+        "VerificationResponseResultCode": {
+            "enum": [
+                "APPROVED",
+                "DISAPPROVED",
+                "EXPIRED",
+                "INCONCLUSIVE",
+                "INSUFFICIENT_DATA",
+                "NOT_APPROVED",
+                "REVOKED",
+                "VERIFICATION_SOURCE_UNAVAILABLE"
+            ],
+            "type": "string"
+        },
+        "VerificationResult": {
+            "enum": [
+                "FALSE",
+                "TRUE",
+                "UNKNOWN"
+            ],
+            "type": "string"
+        },
+        "VerificationStatus": {
+            "enum": [
+                "COMPLETE",
+                "NEW",
+                "OPEN",
+                "PENDING"
+            ],
+            "type": "string"
+        },
+        "VerificationType": {
+            "enum": [
+                "ASSET_REVIEW",
+                "AUTHORITATIVE",
+                "EMAIL_LOOP",
+                "HONOR_SYSTEM",
+                "IP_ADDRESS",
+                "SSO",
+                "VALIDATION"
+            ],
+            "type": "string"
+        },
+        "VerificationUserResponse": {
+            "properties": {"type": {"type": "string"}},
+            "type": "object"
+        },
+        "VerificationUserResponseData": {
+            "properties": {
+                "data": {"type": "string"},
+                "type": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "VerificationUserResponseResult": {
+            "properties": {
+                "data": {"type": "boolean"},
+                "type": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "VerificationUserResponseUploadToken": {
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/Token",
+                    "type": "string"
+                },
+                "type": {"type": "string"}
+            },
+            "type": "object"
+        },
+        "certificationresponsefromrequestid": {
+            "description": "placeholder",
+            "properties": {},
+            "type": "object"
+        },
+        "dummy": {
+            "description": "placeholder",
+            "properties": {},
+            "type": "object"
+        }
+    },
+    "info": {
+        "description": "Instant eligibility verification",
+        "title": "SheerID REST API",
+        "version": "0.5"
+    },
+    "paths": {
+        "/asset": {"post": {
+            "consumes": ["multipart/form-data"],
+            "description": "Upload an asset.",
+            "operationId": "upload",
+            "parameters": [
+                {
+                    "description": "one or more files, with parameter keys prefixed by `file` (Ex: `file0`, `file1`...). File type must be one of our [supported MIME types](http://developer.sheerid.com/asset-mime-types/).",
+                    "in": "formData",
+                    "name": "file",
+                    "required": false,
+                    "type": "file"
+                },
+                {
+                    "description": "a valid asset token obtained from [Issue Token](#!/Asset/issueToken)",
+                    "in": "formData",
+                    "name": "token",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "default": "true",
+                    "description": "to merge multiple documents into one when possible",
+                    "in": "formData",
+                    "name": "mergeMultipleDocuments",
+                    "required": false,
+                    "type": "boolean"
+                },
+                {
+                    "description": "the type of document the user is uploading",
+                    "enum": [
+                        "ACCEPTANCE_LETTER",
+                        "ARTICLES_OF_INCORPORATION",
+                        "BUSINESS_TAX_FORM_PAGE1",
+                        "CLASS_SCHEDULE",
+                        "DATED_ID_CARD",
+                        "DBA_REGISTRATION",
+                        "DD214",
+                        "ID_CARD",
+                        "INSURANCE_CARD",
+                        "IRS_SCHEDULE_B1_FORM_1065",
+                        "IRS_SCHEDULE_C_OR_CEZ_PAGE_1",
+                        "IRS_SCHEDULE_G_FORM_1120",
+                        "IRS_SCHEDULE_K1_FORM_1065",
+                        "IRS_SCHEDULE_K1_FORM_1120S",
+                        "LEASE_AGREEMENT",
+                        "LETTER_OF_AUTHORIZATION",
+                        "OFFICIAL_LETTER",
+                        "OTHER",
+                        "PAY_STUB",
+                        "POWER_OF_ATTORNEY",
+                        "REGISTRATION_RECEIPT",
+                        "REPORT_CARD",
+                        "SECRETARY_OF_STATE_FILING",
+                        "TRANSCRIPT",
+                        "TUITION_RECEIPT",
+                        "VENDOR_STATEMENT"
+                    ],
+                    "in": "formData",
+                    "name": "assetType",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "description": "free form text to provide additional details of assetType",
+                    "in": "formData",
+                    "name": "assetTypeDescription",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "description": "A URL to which the request will be redirected upon a successful upload.  If omitted, will not redirect upon success.",
+                    "in": "formData",
+                    "name": "success",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "description": "A URL to which the request will be redirected upon a failed upload.  If omitted, will not redirect upon failure.",
+                    "in": "formData",
+                    "name": "failure",
+                    "required": false,
+                    "type": "string"
+                }
+            ],
+            "produces": ["application/json"],
+            "responses": {"200": {
+                "description": "A list of [Asset](#!/definitions/Asset) objects",
+                "schema": {"$ref": "#/definitions/Asset"}
+            }},
+            "summary": "Upload",
+            "tags": ["Asset"]
+        }},
+        "/asset/token": {"post": {
+            "consumes": [],
+            "description": "Issue a token to facilitate an Asset upload via [Upload](#!/Asset/upload).",
+            "operationId": "issueToken",
+            "parameters": [
+                {
+                    "description": "the identifier of the request to which the Assets will be attached",
+                    "in": "formData",
+                    "name": "requestId",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "default": "86400000",
+                    "description": "time (in milliseconds) before the token expires (default: 1 day)",
+                    "format": "long",
+                    "in": "formData",
+                    "name": "lifespan",
+                    "required": false,
+                    "type": "number"
+                }
+            ],
+            "produces": ["application/json"],
+            "responses": {"200": {
+                "description": "A single [ExpiringToken](#!/definitions/ExpiringToken) object",
+                "schema": {"$ref": "#/definitions/ExpiringToken"}
+            }},
+            "summary": "Issue Token",
+            "tags": ["Asset"]
+        }},
+        "/required_fields": {"get": {
+            "consumes": [],
+            "description": "Obtain a map of required fields for the specified VerificationTypes.\n If multiple VerificationTypes are specified the list is the union of the individual results.",
+            "operationId": "listFields",
+            "parameters": [{
+                "$ref": "#/definitions/VerificationType",
+                "collectionFormat": "multi",
+                "description": "",
+                "in": "query",
+                "items": {"type": "string"},
+                "name": "verificationTypes",
+                "required": false,
+                "type": "array"
+            }],
+            "produces": ["application/json"],
+            "responses": {"200": {
+                "description": "A map from AffiliationType to a list of required field objects",
+                "schema": {"$ref": "#/definitions/dummy"}
+            }},
+            "summary": "List Fields",
+            "tags": ["RequiredFields"]
+        }},
+        "/required_fields/template/{templateId}": {"get": {
+            "consumes": [],
+            "description": "Obtain a map of required fields for the specified Verification Template",
+            "operationId": "listFieldsForTemplate",
+            "parameters": [{
+                "description": "",
+                "in": "path",
+                "name": "templateId",
+                "required": true,
+                "type": "string"
+            }],
+            "produces": ["application/json"],
+            "responses": {"200": {
+                "description": "A map from AffiliationType to a list of required field objects",
+                "schema": {"$ref": "#/definitions/dummy"}
+            }},
+            "summary": "List Fields For Template",
+            "tags": ["RequiredFields"]
+        }},
+        "/verification": {"post": {
+            "consumes": ["application/x-www-form-urlencoded"],
+            "description": "**Perform a verification.** This is the primary method of importance for most integrations.\n Fields to supply vary based on the affiliations the caller is interested in verifying and the type of verification being performed.  For a list of which fields are relevant for a particular type of request, see the [verification field requirements documentation](http://developer.sheerid.com/docs/fields.html).",
+            "operationId": "verify",
+            "parameters": [
+                {
+                    "description": "An email address, preferably the one issued by the organization being verified",
+                    "in": "formData",
+                    "name": "EMAIL",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "description": "Given name of the verification subject",
+                    "in": "formData",
+                    "name": "FIRST_NAME",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "description": "Surname/family name of the verification subject",
+                    "in": "formData",
+                    "name": "LAST_NAME",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "description": "Complete birth date of the verification subject",
+                    "format": "date",
+                    "in": "formData",
+                    "name": "BIRTH_DATE",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "description": "The date on which the affiliation being verified began. For VETERAN, this is the date of discharge/end of active duty status.",
+                    "format": "date",
+                    "in": "formData",
+                    "name": "STATUS_START_DATE",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "description": "an optional organization id, see [List Organizations](?url=swagger-all.json#!/Organization/listOrganizations)",
+                    "format": "long",
+                    "in": "formData",
+                    "name": "organizationId",
+                    "required": false,
+                    "type": "number"
+                },
+                {
+                    "description": "an organization name supplied when the ID is not known. If `organizationId` is supplied, this parameter is ignored.",
+                    "in": "formData",
+                    "name": "organizationName",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "description": "an organization type (see [List Organization Types](?url=swagger-all.json#!/OrganizationType/listOrganizationTypes)) to help when matching the organization name.  If `organizationId` is supplied or `organizationName` is not supplied, this parameter is ignored.",
+                    "enum": [
+                        "CORPORATE",
+                        "FIRST_RESPONDER",
+                        "K12",
+                        "MEDICAL",
+                        "MEMBERSHIP",
+                        "MILITARY",
+                        "NON_PROFIT",
+                        "UNIVERSITY"
+                    ],
+                    "in": "formData",
+                    "name": "organizationType",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "default": "true",
+                    "description": "`false` to disable matching of organizationName. If `organizationId` is supplied or `organizationName` is not supplied, this parameter is ignored.",
+                    "in": "formData",
+                    "name": "matchName",
+                    "required": false,
+                    "type": "boolean"
+                },
+                {
+                    "collectionFormat": "multi",
+                    "description": "A comma-delimited list of affiliation type names (see [List Affiliation Types](?url=swagger-all.json#!/AffiliationType/listAffiliationTypes)). Defines the affiliations the requestor deems acceptable for a given verification. (For example, when attempting to verify that an individual is either a full-time or part-time student: `_affiliationTypes=STUDENT_FULL_TIME,STUDENT_PART_TIME`",
+                    "enum": [
+                        "ACTIVE_DUTY",
+                        "ALUMNUS",
+                        "BUSINESS",
+                        "BUSINESS_CONTACT",
+                        "CIVILIAN_EMPLOYEE",
+                        "CONTRACTOR",
+                        "CUSTOMER",
+                        "DISABLED_VETERAN",
+                        "EMPLOYEE",
+                        "EMT",
+                        "FACULTY",
+                        "FIREFIGHTER",
+                        "GRADUATE",
+                        "MEMBER",
+                        "MILITARY_FAMILY",
+                        "MILITARY_RETIREE",
+                        "NON_PROFIT",
+                        "NURSE",
+                        "OWNER",
+                        "POLICE",
+                        "RESELLER",
+                        "RESERVIST",
+                        "STUDENT_COLLEGE_BOUND",
+                        "STUDENT_FULL_TIME",
+                        "STUDENT_PART_TIME",
+                        "VETERAN"
+                    ],
+                    "in": "formData",
+                    "items": {"type": "string"},
+                    "name": "_affiliationTypes",
+                    "required": false,
+                    "type": "array"
+                },
+                {
+                    "collectionFormat": "multi",
+                    "description": "A comma-delimited list of verification type names (see [List Verification Types](?url=swagger-all.json#!/VerificationType/listVerificationTypes)). Defines the requestor's list of acceptable techniques that may be used to verify an individual.",
+                    "enum": [
+                        "ASSET_REVIEW",
+                        "AUTHORITATIVE",
+                        "EMAIL_LOOP",
+                        "HONOR_SYSTEM",
+                        "IP_ADDRESS",
+                        "SSO",
+                        "VALIDATION"
+                    ],
+                    "in": "formData",
+                    "items": {"type": "string"},
+                    "name": "_verificationTypes",
+                    "required": false,
+                    "type": "array"
+                },
+                {
+                    "collectionFormat": "multi",
+                    "description": "A comma-delimited list of asset type names (see [List Asset Types](?url=swagger-all.json#!/AssetType/listAssetTypes)). Defines the requestor's list of acceptable documents for use with `ASSET_REVIEW` verification types.  If `ASSET_REVIEW` is not an allowable verification type, this configuration is ignored.",
+                    "enum": [
+                        "ACCEPTANCE_LETTER",
+                        "ARTICLES_OF_INCORPORATION",
+                        "BUSINESS_TAX_FORM_PAGE1",
+                        "CLASS_SCHEDULE",
+                        "DATED_ID_CARD",
+                        "DBA_REGISTRATION",
+                        "DD214",
+                        "ID_CARD",
+                        "INSURANCE_CARD",
+                        "IRS_SCHEDULE_B1_FORM_1065",
+                        "IRS_SCHEDULE_C_OR_CEZ_PAGE_1",
+                        "IRS_SCHEDULE_G_FORM_1120",
+                        "IRS_SCHEDULE_K1_FORM_1065",
+                        "IRS_SCHEDULE_K1_FORM_1120S",
+                        "LEASE_AGREEMENT",
+                        "LETTER_OF_AUTHORIZATION",
+                        "OFFICIAL_LETTER",
+                        "OTHER",
+                        "PAY_STUB",
+                        "POWER_OF_ATTORNEY",
+                        "REGISTRATION_RECEIPT",
+                        "REPORT_CARD",
+                        "SECRETARY_OF_STATE_FILING",
+                        "TRANSCRIPT",
+                        "TUITION_RECEIPT",
+                        "VENDOR_STATEMENT"
+                    ],
+                    "in": "formData",
+                    "items": {"type": "string"},
+                    "name": "_assetTypes",
+                    "required": false,
+                    "type": "array"
+                },
+                {
+                    "collectionFormat": "multi",
+                    "description": "A comma-delimited list of Reward IDs (see [List Rewards](?url=swagger-all.json#!/Reward/listRewards)). Defines any rewards to be issued when an individual is verified.",
+                    "in": "formData",
+                    "items": {"type": "string"},
+                    "name": "_rewardIds",
+                    "required": false,
+                    "type": "array"
+                },
+                {
+                    "description": "metadata value for the supplied key (ex: `:orderId=179365`)",
+                    "in": "formData",
+                    "name": "_metadata key (any string prefixed with `:`)_",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "description": "the identifier of an existing template (see [Create Template](?url=swagger-all.json#!/Template/createTemplate)) from which to source verification request configuration. If this value is supplied, any other request configuration directives (parameters prefixed with `_`) are ignored.",
+                    "in": "formData",
+                    "name": "templateId",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "description": "a custom identifier for tracking a unique end-user as recognized by a client system",
+                    "in": "formData",
+                    "name": "endUserId",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "description": "the end-user's IP address, may be supplied in situations where the API is invoked by an intermediate server",
+                    "in": "formData",
+                    "name": "endUserIp",
+                    "required": false,
+                    "type": "string"
+                }
+            ],
+            "produces": ["application/json"],
+            "responses": {"200": {
+                "description": "A single [VerificationResponse](#!/definitions/VerificationResponse) object",
+                "schema": {"$ref": "#/definitions/VerificationResponse"}
+            }},
+            "summary": "Verify",
+            "tags": ["Verification"]
+        }},
+        "/verification/{requestId}": {
+            "get": {
+                "consumes": [],
+                "description": "Check the status of a historical verification.",
+                "operationId": "inquire",
+                "parameters": [{
+                    "description": "the identifier returned with the original request",
+                    "in": "path",
+                    "name": "requestId",
+                    "required": true,
+                    "type": "string"
+                }],
+                "produces": ["application/json"],
+                "responses": {"200": {
+                    "description": "A single [VerificationResponse](#!/definitions/VerificationResponse) object",
+                    "schema": {"$ref": "#/definitions/VerificationResponse"}
+                }},
+                "summary": "Inquire",
+                "tags": ["Verification"]
+            },
+            "post": {
+                "consumes": ["application/x-www-form-urlencoded"],
+                "description": "Update and re-submit an existing verification request.\n The previous response to this request must have a result of `null`, otherwise update is disallowed. Only identity data can be changed (parameter names as described by [List Fields](?url=swagger-all.json#!/Field/listFields)). Organization id/name or other configuration supplied with the original request is not modifiable.",
+                "operationId": "updateVerification",
+                "parameters": [
+                    {
+                        "description": "the identifier returned with the original request",
+                        "in": "path",
+                        "name": "requestId",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "description": "An email address, preferably the one issued by the organization being verified",
+                        "in": "formData",
+                        "name": "EMAIL",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Given name of the verification subject",
+                        "in": "formData",
+                        "name": "FIRST_NAME",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Surname/family name of the verification subject",
+                        "in": "formData",
+                        "name": "LAST_NAME",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "Complete birth date of the verification subject",
+                        "format": "date",
+                        "in": "formData",
+                        "name": "BIRTH_DATE",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "description": "The date on which the affiliation being verified began. For VETERAN, this is the date of discharge/end of active duty status.",
+                        "format": "date",
+                        "in": "formData",
+                        "name": "STATUS_START_DATE",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "produces": ["application/json"],
+                "responses": {"200": {
+                    "description": "A single [VerificationResponse](#!/definitions/VerificationResponse) object",
+                    "schema": {"$ref": "#/definitions/VerificationResponse"}
+                }},
+                "summary": "Update Verification",
+                "tags": ["Verification"]
             }
         }
-    }
+    },
+    "swagger": "2.0"
 }
