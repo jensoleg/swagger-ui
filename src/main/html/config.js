@@ -6,6 +6,7 @@ $(function () {
     url = swaggerSpec;
 
   var apiKey = '';
+  var defaultApiKey = 'y_NbAkKc66ryYTWUXYEu';
   if (typeof defaultApiKey !== 'undefined')
     apiKey = defaultApiKey;
 
